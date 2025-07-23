@@ -4,9 +4,9 @@ Situs interaktif yang memadukan estetika kosmik dan kekuatan iblis untuk mencipt
 
 ## 🔮 Preview
 
-Klik untuk melihat langsung: [Celestial Demon Beast](https://celestialdemonbeast.netlify.app)
+Klik untuk melihat langsung: [Celestial Demon Beast](https://cdb-official.netlify.app)
 
-<img src="https://celestialdemonbeast.netlify.app/preview-image.png" alt="Preview Screenshot" style="max-width: 100%;">
+<img src="https://cdb-official.netlify.app/Futaki_Empire_Thumbnail.jpg" alt="Preview Screenshot" style="max-width: 100%;">
 
 ## 🚀 Features
 
