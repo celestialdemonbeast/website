@@ -1,0 +1,129 @@
+<!-- https://gist.github.com/Twanislas/8e790f247e8d975f26aca89358fe69ff -->
+<!-- Recommended size for the view is 165px high, 500px wide -->
+
+<html>
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+    <script>
+      var timeoutHandle
+      var getData = function() {
+        $.ajax({
+          type: "GET",
+          url: "http://localhost:9863/query",
+          dataType: "json",
+          success: function(resp) {
+            if (resp.player.isPaused == false) {
+              if (timeoutHandle) {
+                clearTimeout(timeoutHandle)
+                timeoutHandle = undefined
+              }
+              var track = resp.track
+              if ($("span#tracktitle").html() != track.title) {
+                $("#widget-container").animate({opacity: 0}, 400, function() {
+                  $("span#tracktitle").html(track.title)
+                  $("span#trackauthor").html(track.author)
+                  $("img#trackcover").attr("src", track.cover)
+                })
+                $("#widget-container").animate({opacity: 1})
+              }
+            } else {
+              if (!timeoutHandle) {
+                timeoutHandle = setTimeout(() => {
+                  $("#widget-container").animate({opacity: 0}, 400, function() {
+                    $("span#tracktitle").html("")
+                  })
+                }, 5000)
+              }
+            }
+          }
+        });
+      };
+
+      // Get data
+      $(document).ready(function () {
+        setInterval(getData, 1000)
+      })
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
+      body {
+        background-color: rgba(0, 0, 0, 0);
+        margin: auto;
+        overflow: hidden;
+        font-family: "Source Sans Pro", sans-serif;
+      }
+      #master-container {
+        width: 100vw;
+        height: 100vh;
+      }
+      #widget-container {
+        position: fixed;
+        opacity: 0;
+        animation-timing-function: ease-in-out;
+        height: 125px;
+        width: 460px;
+        padding: 20px;
+        display: flex;
+        border-radius: 25px;
+        background: rgba(0,0,0,0.7);
+
+      }
+      #trackcover-container {
+        height: 125px;
+        width: 125px;
+        float: left;
+        margin: auto 0;
+      }
+      #trackcover {
+        height: 125px;
+        width: 125px;
+        border-radius: 5%;
+        box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 20px 0px;
+      }
+      #trackinfo-container {
+        float: right;
+        margin: auto 0;
+        padding-left: 15px;
+      }
+      #trackinfo-container span {
+        display: -webkit-box;
+        text-align: left;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+      }
+      #tracktitle {
+        color: white;
+        font-weight: bold;
+        font-size: 32px;
+        -webkit-line-clamp: 2;
+      }
+      #trackauthor {
+        color: white;
+        font-size: 25px;
+        margin-top: 10px;
+        -webkit-line-clamp: 1;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id="master-container">
+      <div id="widget-container">
+        <div id="trackcover-container">
+          <img id="trackcover" src="#">
+        </div>
+        <div id="trackinfo-container">
+          <span id="tracktitle"></span>
+          <span id="trackauthor"></span>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
