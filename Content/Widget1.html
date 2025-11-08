@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Music Widget</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Animasi untuk progress bar */
+    @keyframes progressAnimation {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    
+    .progress-animation {
+      animation: progressAnimation 30s linear forwards;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black min-h-screen flex items-center justify-center p-4">
+  <div id="master-container" class="w-full max-w-md">
+    <div id="widget-container" class="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-5 shadow-2xl border border-gray-700/50 transition-all duration-500 opacity-0 hidden">
+      <div class="flex items-center space-x-4">
+        <!-- Album Cover -->
+        <div class="flex-shrink-0 relative">
+          <img id="trackcover" src="#" alt="Album Cover" class="w-24 h-24 rounded-xl shadow-lg object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-xl"></div>
+        </div>
+        
+        <!-- Track Info -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center mb-1">
+            <!-- Play Indicator -->
+            <div class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            <span class="text-xs text-green-400 font-medium">NOW PLAYING</span>
+          </div>
+          
+          <h2 id="tracktitle" class="text-white font-semibold text-lg truncate mb-1">Loading...</h2>
+          <p id="trackauthor" class="text-gray-400 text-sm truncate">Loading...</p>
+          
+          <!-- Progress Bar -->
+          <div class="mt-3">
+            <div class="h-1 bg-gray-700 rounded-full overflow-hidden">
+              <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-0"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span id="current-time">0:00</span>
+              <span id="total-time">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Controls -->
+      <div class="flex justify-center space-x-6 mt-4">
+        <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button id="play-pause-btn" class="bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors">
+          <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+        <button id="next-btn" class="text-gray-400 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Paused State -->
+    <div id="paused-container" class="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-5 shadow-2xl border border-gray-700/50 text-center transition-all duration-500 opacity-0">
+      <div class="flex flex-col items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+        </svg>
+        <h3 class="text-white font-medium text-lg">Music Paused</h3>
+        <p class="text-gray-400 mt-1">Play something to see track info</p>
+      </div>
+    </div>
+    
+    <!-- Error State -->
+    <div id="error-container" class="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-5 shadow-2xl border border-gray-700/50 text-center transition-all duration-500 opacity-0 hidden">
+      <div class="flex flex-col items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-white font-medium text-lg">Connection Error</h3>
+        <p class="text-gray-400 mt-1">Unable to fetch music data</p>
+        <button id="retry-btn" class="mt-3 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+          Retry
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variabel global
+    let timeoutHandle;
+    let progressInterval;
+    let currentProgress = 0;
+    let totalDuration = 180; // Default 3 minutes
+    let isPlaying = false;
+    
+    // API Configuration
+    const API_URL = 'https://ws.audioscrobbler.com/2.0/'; // Last.fm API
+    const API_KEY = 'YOUR_API_KEY_HERE'; // Ganti dengan API key Anda
+    const USERNAME = 'YOUR_USERNAME_HERE'; // Ganti dengan username Last.fm Anda
+    
+    // Format waktu dari detik ke menit:detik
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    
+    // Update progress bar
+    function updateProgressBar() {
+      if (isPlaying) {
+        currentProgress += 1;
+        const progressPercentage = (currentProgress / totalDuration) * 100;
+        $('#progress-bar').css('width', `${progressPercentage}%`);
+        $('#current-time').text(formatTime(currentProgress));
+        
+        if (currentProgress >= totalDuration) {
+          // Track selesai, reset progress
+          resetProgress();
+          // Ambil track berikutnya
+          getData();
+        }
+      }
+    }
+    
+    // Reset progress bar
+    function resetProgress() {
+      currentProgress = 0;
+      $('#progress-bar').css('width', '0%');
+      $('#current-time').text('0:00');
+      clearInterval(progressInterval);
+    }
+    
+    // Toggle play/pause
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      
+      if (isPlaying) {
+        $('#play-icon').addClass('hidden');
+        $('#pause-icon').removeClass('hidden');
+        progressInterval = setInterval(updateProgressBar, 1000);
+      } else {
+        $('#play-icon').removeClass('hidden');
+        $('#pause-icon').addClass('hidden');
+        clearInterval(progressInterval);
+      }
+    }
+    
+    // Fungsi untuk mengambil data dari API
+    function getData() {
+      // Reset progress bar
+      resetProgress();
+      
+      // Untuk Last.fm API, kita akan mengambil track yang sedang diputar
+      $.ajax({
+        type: "GET",
+        url: API_URL,
+        data: {
+          method: 'user.getrecenttracks',
+          user: USERNAME,
+          api_key: API_KEY,
+          format: 'json',
+          limit: 1
+        },
+        dataType: "json",
+        success: function(resp) {
+          // Sembunyikan error container jika ada
+          $('#error-container').addClass('hidden');
+          
+          // Periksa apakah ada track yang sedang diputar
+          const recentTracks = resp.recenttracks.track;
+          if (recentTracks.length > 0) {
+            const currentTrack = recentTracks[0];
+            const isNowPlaying = currentTrack['@attr'] && currentTrack['@attr'].nowplaying === 'true';
+            
+            if (isNowPlaying) {
+              if (timeoutHandle) {
+                clearTimeout(timeoutHandle);
+                timeoutHandle = undefined;
+              }
+              
+              // Tampilkan widget musik, sembunyikan pesan paused
+              $('#paused-container').addClass('hidden');
+              $('#widget-container').removeClass('hidden');
+              
+              const trackTitle = currentTrack.name;
+              const trackArtist = currentTrack.artist['#text'];
+              const trackCover = currentTrack.image[2]['#text']; // Ukuran medium
+              
+              // Perbarui UI hanya jika track berubah
+              if ($('#tracktitle').text() !== trackTitle) {
+                $('#widget-container').animate({opacity: 0}, 400, function() {
+                  $('#tracktitle').text(trackTitle);
+                  $('#trackauthor').text(trackArtist);
+                  $('#trackcover').attr('src', trackCover);
+                  
+                  // Reset dan mulai progress bar
+                  resetProgress();
+                  isPlaying = true;
+                  $('#play-icon').addClass('hidden');
+                  $('#pause-icon').removeClass('hidden');
+                  progressInterval = setInterval(updateProgressBar, 1000);
+                });
+                $('#widget-container').animate({opacity: 1}, 400);
+              }
+            } else {
+              // Tidak ada track yang sedang diputar
+              if (!timeoutHandle) {
+                timeoutHandle = setTimeout(() => {
+                  $('#widget-container').animate({opacity: 0}, 400, function() {
+                    $('#widget-container').addClass('hidden');
+                    $('#paused-container').removeClass('hidden');
+                    $('#paused-container').animate({opacity: 1}, 400);
+                    
+                    // Reset progress dan pause state
+                    resetProgress();
+                    isPlaying = false;
+                    $('#play-icon').removeClass('hidden');
+                    $('#pause-icon').addClass('hidden');
+                  });
+                }, 2000);
+              }
+            }
+          } else {
+            // Tidak ada track yang ditemukan
+            showPausedState();
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error fetching data:', error);
+          showErrorState();
+        }
+      });
+    }
+    
+    // Tampilkan state paused
+    function showPausedState() {
+      $('#widget-container').animate({opacity: 0}, 400, function() {
+        $('#widget-container').addClass('hidden');
+        $('#paused-container').removeClass('hidden');
+        $('#paused-container').animate({opacity: 1}, 400);
+      });
+    }
+    
+    // Tampilkan state error
+    function showErrorState() {
+      $('#widget-container').animate({opacity: 0}, 400, function() {
+        $('#widget-container').addClass('hidden');
+        $('#paused-container').addClass('hidden');
+        $('#error-container').removeClass('hidden');
+        $('#error-container').animate({opacity: 1}, 400);
+      });
+    }
+    
+    // Inisialisasi saat dokumen siap
+    $(document).ready(function () {
+      // Inisialisasi dengan data pertama
+      getData();
+      
+      // Atur interval untuk pembaruan data
+      setInterval(getData, 10000); // Update setiap 10 detik
+      
+      // Event handlers untuk kontrol
+      $('#play-pause-btn').click(togglePlayPause);
+      
+      $('#prev-btn').click(function() {
+        // Logic untuk track sebelumnya
+        resetProgress();
+        getData();
+      });
+      
+      $('#next-btn').click(function() {
+        // Logic untuk track berikutnya
+        resetProgress();
+        getData();
+      });
+      
+      $('#retry-btn').click(function() {
+        getData();
+      });
+    });
+  </script>
+</body>
+</html>
