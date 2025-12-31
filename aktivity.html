@@ -81,6 +81,493 @@
     </div>
   </section>
 
+
+  <!-- New Year Countdown Overlay -->
+<div id="newYearOverlay" class="new-year-overlay">
+  <button class="close-countdown" onclick="closeCountdown()">
+    <i class="fas fa-times"></i>
+  </button>
+  
+  <div class="countdown-container">
+    <h1 class="countdown-title">🎉 Menuju Tahun Baru 2026 🎉</h1>
+    <div class="countdown-timer">
+      <div class="countdown-unit">
+        <div class="countdown-number" id="countdown-hours">00</div>
+        <div class="countdown-label">Jam</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-number" id="countdown-minutes">00</div>
+        <div class="countdown-label">Menit</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-number" id="countdown-seconds">00</div>
+        <div class="countdown-label">Detik</div>
+      </div>
+    </div>
+    <p style="color: #FFD700; font-size: 1.2rem;">Bersiaplah untuk menyambut tahun baru dengan penuh harapan!</p>
+  </div>
+  
+  <div id="newYearMessage" class="new-year-message">
+    Selamat Tahun Baru 2026!<br>
+    Mari sambut harapan baru dengan semangat dan langkah penuh percaya diri.
+  </div>
+</div>
+<script>
+// Configuration - Anda bisa ubah nilai ini sesuai kebutuhan
+const EVENT_CONFIG = {
+    // Atur tanggal, bulan, dan tahun target (bulan dimulai dari 0 = Januari)
+    targetDate: new Date(2025, 11, 31, 23, 59, 50), // Default: 31 Desember 2025 23:59:50
+    // Atur berapa menit kembang api akan ditampilkan setelah target waktu tercapai
+    fireworksDuration: 5, // dalam menit
+    // Pesan yang akan ditampilkan setelah target waktu tercapai
+    celebrationMessage: "Selamat Tahun Baru 2026! Mari sambut harapan baru dengan semangat dan langkah penuh percaya diri.",
+    // Warna tema (opsional)
+    themeColors: {
+        primary: '#FFD700',
+        secondary: '#FF0000',
+        background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)'
+    }
+};
+
+// State management
+let countdownInterval = null;
+let fireworksInterval = null;
+let isCelebrating = false;
+
+// Fungsi untuk mengubah konfigurasi dari luar
+function updateEventConfig(newConfig) {
+    Object.assign(EVENT_CONFIG, newConfig);
+    if (EVENT_CONFIG.targetDate instanceof Date === false) {
+        console.error('targetDate harus berupa objek Date');
+        return;
+    }
+    
+    // Restart countdown dengan konfigurasi baru
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+    checkCountdown();
+}
+
+// Main countdown functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Cek countdown setiap menit
+    checkCountdown();
+    setInterval(checkCountdown, 60000);
+    
+    // Mulai kembang api secara bertahap
+    startFireworks();
+    
+    // Log konfigurasi saat ini
+    console.log('🎯 Event Countdown Konfigurasi:');
+    console.log('Target Date:', EVENT_CONFIG.targetDate.toLocaleString());
+    console.log('Fireworks Duration:', EVENT_CONFIG.fireworksDuration + ' menit');
+    console.log('Message:', EVENT_CONFIG.celebrationMessage);
+});
+
+function checkCountdown() {
+    const now = new Date();
+    const targetDate = EVENT_CONFIG.targetDate;
+    
+    // Hitung waktu tersisa dalam milidetik
+    const timeRemaining = targetDate - now;
+    
+    // Jika waktu target belum lewat (masih ada waktu tersisa)
+    if (timeRemaining > 0) {
+        // Hitung berapa hari sebelum tanggal target
+        const daysBefore = Math.floor((targetDate - now) / (1000 * 60 * 60 * 24));
+        
+        // Tampilkan countdown jika H-1 atau H-0
+        if (daysBefore <= 1) {
+            const overlay = document.getElementById('newYearOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                
+                // Update countdown setiap detik
+                if (!countdownInterval) {
+                    updateCountdown();
+                    countdownInterval = setInterval(updateCountdown, 1000);
+                }
+            }
+        }
+    } 
+    // Jika waktu target sudah tercapai
+    else if (timeRemaining <= 0 && !isCelebrating) {
+        const minutesPastTarget = Math.abs(timeRemaining) / (1000 * 60);
+        
+        // Tampilkan kembang api selama durasi yang ditentukan
+        if (minutesPastTarget < EVENT_CONFIG.fireworksDuration) {
+            startCelebration();
+        }
+    }
+}
+
+function updateCountdown() {
+    const now = new Date();
+    const targetDate = EVENT_CONFIG.targetDate;
+    const timeRemaining = targetDate - now;
+    
+    if (timeRemaining > 0) {
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        
+        // Update tampilan countdown jika elemen ada
+        const hoursEl = document.getElementById('countdown-hours');
+        const minutesEl = document.getElementById('countdown-minutes');
+        const secondsEl = document.getElementById('countdown-seconds');
+        
+        if (hoursEl) hoursEl.textContent = (days * 24 + hours).toString().padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
+        
+        // Update judul countdown
+        const titleEl = document.querySelector('.countdown-title');
+        if (titleEl) {
+            const eventName = `Menuju ${targetDate.getFullYear()}`;
+            titleEl.textContent = `🎉 ${eventName} 🎉`;
+        }
+        
+        // Buat kembang api acak selama countdown
+        if (seconds % 5 === 0) {
+            createFirework();
+        }
+        
+        // Jika kurang dari 10 detik, intensifkan kembang api
+        if (timeRemaining < 10000) {
+            if (seconds % 2 === 0) {
+                createFirework();
+            }
+        }
+    } else {
+        // Waktu target tercapai
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        startCelebration();
+    }
+}
+
+function startCelebration() {
+    if (isCelebrating) return;
+    
+    isCelebrating = true;
+    const overlay = document.getElementById('newYearOverlay');
+    
+    if (overlay) {
+        // Sembunyikan countdown, tampilkan tahun animasi
+        const countdownContainer = overlay.querySelector('.countdown-container');
+        const messageEl = document.getElementById('newYearMessage');
+        
+        if (countdownContainer) countdownContainer.style.display = 'none';
+        if (messageEl) {
+            messageEl.style.display = 'none';
+        }
+        
+        // Buat elemen tahun 2026 animasi
+        createYearAnimation();
+        
+        // Tunggu 2 detik, lalu tampilkan pesan
+        setTimeout(() => {
+            if (messageEl) {
+                messageEl.style.display = 'block';
+                messageEl.textContent = EVENT_CONFIG.celebrationMessage;
+            }
+        }, 2000);
+        
+        overlay.style.display = 'flex';
+        
+        // Intensifkan kembang api
+        if (fireworksInterval) clearInterval(fireworksInterval);
+        fireworksInterval = setInterval(createFirework, 50);
+        
+        // Buat konfeti
+        startConfetti();
+        
+        // Otomatis tutup setelah durasi kembang api
+        setTimeout(() => {
+            stopCelebration();
+        }, EVENT_CONFIG.fireworksDuration * 60 * 1000);
+    }
+}
+
+function createYearAnimation() {
+    const overlay = document.getElementById('newYearOverlay');
+    
+    // Hapus animasi tahun sebelumnya jika ada
+    const existingAnimation = overlay.querySelector('.year-animation');
+    if (existingAnimation) {
+        existingAnimation.remove();
+    }
+    
+    // Buat elemen untuk animasi tahun
+    const yearAnimation = document.createElement('div');
+    yearAnimation.className = 'year-animation';
+    yearAnimation.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10vw;
+        font-weight: 900;
+        color: #FFD700;
+        text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000, 0 0 60px #FF0000;
+        opacity: 0;
+        z-index: 9999;
+        font-family: 'Raleway', sans-serif;
+        letter-spacing: 10px;
+        text-align: center;
+        width: 100%;
+    `;
+    
+    // Tambahkan tahun dari konfigurasi (tahun target + 1)
+    const targetYear = EVENT_CONFIG.targetDate.getFullYear() + 1;
+    yearAnimation.textContent = targetYear;
+    
+    overlay.appendChild(yearAnimation);
+    
+    // Animasi pembesaran 20% selama 2 detik
+    const animation = yearAnimation.animate([
+        { 
+            transform: 'translate(-50%, -50%) scale(1)',
+            opacity: 0,
+            filter: 'blur(10px)'
+        },
+        { 
+            transform: 'translate(-50%, -50%) scale(1.2)', // 20% lebih besar
+            opacity: 1,
+            filter: 'blur(0px)'
+        },
+        { 
+            transform: 'translate(-50%, -50%) scale(1.15)',
+            opacity: 0.9
+        }
+    ], {
+        duration: 2000,
+        easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        fill: 'forwards'
+    });
+    
+    // Tambahkan efek cahaya berdenyut setelah animasi selesai
+    animation.onfinish = () => {
+        yearAnimation.style.animation = 'pulseGlow 1.5s infinite alternate';
+        
+        // Tambahkan style untuk animasi pulse
+        if (!document.querySelector('#yearAnimationStyles')) {
+            const style = document.createElement('style');
+            style.id = 'yearAnimationStyles';
+            style.textContent = `
+                @keyframes pulseGlow {
+                    0% {
+                        text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000, 0 0 60px #FF0000;
+                        transform: translate(-50%, -50%) scale(1.15);
+                    }
+                    100% {
+                        text-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, 0 0 90px #FFD700;
+                        transform: translate(-50%, -50%) scale(1.18);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    };
+}
+
+function stopCelebration() {
+    isCelebrating = false;
+    const overlay = document.getElementById('newYearOverlay');
+    
+    if (overlay) {
+        // Hapus animasi tahun
+        const yearAnimation = overlay.querySelector('.year-animation');
+        if (yearAnimation) {
+            yearAnimation.remove();
+        }
+        
+        overlay.style.display = 'none';
+        
+        // Reset tampilan
+        const countdownContainer = overlay.querySelector('.countdown-container');
+        const messageEl = document.getElementById('newYearMessage');
+        
+        if (countdownContainer) countdownContainer.style.display = 'block';
+        if (messageEl) messageEl.style.display = 'none';
+    }
+    
+    // Hentikan kembang api
+    if (fireworksInterval) {
+        clearInterval(fireworksInterval);
+        fireworksInterval = null;
+    }
+    
+    // Hentikan konfeti
+    stopConfetti();
+}
+
+function startFireworks() {
+    // Kembang api background (jarang)
+    setInterval(() => {
+        if (!isCelebrating && Math.random() > 0.7) {
+            createFirework();
+        }
+    }, 2000);
+}
+
+function createFirework() {
+    const overlay = document.getElementById('newYearOverlay');
+    if (!overlay || overlay.style.display !== 'flex') return;
+    
+    const firework = document.createElement('div');
+    firework.style.cssText = `
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+    `;
+    
+    const colors = ['#FF0000', '#FFD700', '#00FF00', '#0080FF', '#FF00FF', '#FFA500'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    
+    firework.style.left = x + 'px';
+    firework.style.top = y + 'px';
+    firework.style.backgroundColor = color;
+    firework.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+    
+    overlay.appendChild(firework);
+    
+    // Animasi ledakan
+    const explosion = firework.animate([
+        { transform: 'scale(1)', opacity: 1 },
+        { transform: 'scale(20)', opacity: 0 }
+    ], {
+        duration: 1000,
+        easing: 'ease-out'
+    });
+    
+    explosion.onfinish = () => {
+        if (firework.parentNode === overlay) {
+            overlay.removeChild(firework);
+        }
+    };
+    
+    // Partikel-partikel kecil
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 3px;
+                height: 3px;
+                border-radius: 50%;
+                left: ${x}px;
+                top: ${y}px;
+                background-color: ${color};
+                pointer-events: none;
+                z-index: 9997;
+            `;
+            
+            overlay.appendChild(particle);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            const duration = 800 + Math.random() * 800;
+            
+            particle.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { 
+                    transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`,
+                    opacity: 0 
+                }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.1, 0.7, 1.0, 0.1)'
+            });
+            
+            setTimeout(() => {
+                if (particle.parentNode === overlay) {
+                    overlay.removeChild(particle);
+                }
+            }, duration);
+        }, i * 20);
+    }
+}
+
+let confettiInterval = null;
+
+function startConfetti() {
+    if (confettiInterval) clearInterval(confettiInterval);
+    
+    // Buat konfeti awal
+    createConfettiBatch();
+    
+    // Lanjutkan membuat konfeti setiap detik
+    confettiInterval = setInterval(createConfettiBatch, 1000);
+}
+
+function stopConfetti() {
+    if (confettiInterval) {
+        clearInterval(confettiInterval);
+        confettiInterval = null;
+    }
+}
+
+function createConfettiBatch() {
+    const overlay = document.getElementById('newYearOverlay');
+    if (!overlay || overlay.style.display !== 'flex') return;
+    
+    for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 10 + 5}px;
+            height: ${Math.random() * 10 + 5}px;
+            background-color: ${['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'][Math.floor(Math.random() * 6)]};
+            left: ${Math.random() * 100}vw;
+            top: -20px;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            opacity: ${Math.random() * 0.7 + 0.3};
+            z-index: 9996;
+        `;
+        
+        overlay.appendChild(confetti);
+        
+        const duration = Math.random() * 3000 + 2000;
+        const delay = Math.random() * 1000;
+        
+        confetti.animate([
+            { 
+                transform: 'translateY(0) rotate(0deg)',
+                opacity: confetti.style.opacity
+            },
+            { 
+                transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg)`,
+                opacity: 0
+            }
+        ], {
+            duration: duration,
+            delay: delay,
+            easing: 'cubic-bezier(0.1, 0.7, 1.0, 0.1)'
+        });
+        
+        setTimeout(() => {
+            if (confetti.parentNode === overlay) {
+                overlay.removeChild(confetti);
+            }
+        }, duration + delay);
+    }
+}
+
+function closeCountdown() {
+    stopCelebration();
+}
+</script>
+
+
   <!-- Konten Utama -->
   <div class="max-w-6xl mx-auto px-4 py-6">
     <!-- Filter -->
