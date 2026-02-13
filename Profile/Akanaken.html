@@ -15,18 +15,13 @@
                         'inter': ['Inter', 'sans-serif'],
                     },
                     animation: {
-                        'fade-in': 'fadeIn 0.3s ease-in-out',
-                        'slide-up': 'slideUp 0.4s ease-out',
                         'pulse-slow': 'pulse 3s infinite',
+                        'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -105,81 +100,14 @@
             opacity: 1;
         }
 
-        /* Modal Gallery Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: linear-gradient(145deg, #1a1b2f 0%, #2c2f4a 100%);
-            border: 2px solid #5865F2;
-            border-radius: 24px;
-            max-width: 1100px;
-            width: 100%;
-            position: relative;
-            animation: slideUp 0.4s ease-out;
-            box-shadow: 0 20px 60px rgba(88, 101, 242, 0.3);
-        }
-
-        .modal-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid rgba(88, 101, 242, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(88, 101, 242, 0.2);
-            border: 1px solid #5865F2;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: #5865F2;
-            transform: rotate(90deg);
-        }
-
+        /* Gallery Grid Styles - Tampil Langsung */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(88, 101, 242, 0.3);
         }
 
         .gallery-item {
@@ -190,6 +118,7 @@
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .gallery-item:hover {
@@ -215,7 +144,7 @@
             left: 0;
             right: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 15px 10px 10px;
+            padding: 15px 8px 8px;
             color: white;
             transform: translateY(100%);
             transition: transform 0.3s ease;
@@ -226,14 +155,24 @@
         }
 
         .gallery-item-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            text-align: center;
         }
 
-        .gallery-item-subtitle {
+        .gallery-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #5865F2;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
             font-size: 0.7rem;
-            opacity: 0.9;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(88, 101, 242, 0.5);
+            z-index: 2;
         }
 
         /* Lightbox Styles */
@@ -244,7 +183,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.98);
-            z-index: 10001;
+            z-index: 10000;
             display: none;
             justify-content: center;
             align-items: center;
@@ -338,27 +277,21 @@
             border: 1px solid #5865F2;
         }
 
-        .view-gallery-btn {
-            background: linear-gradient(135deg, #5865F2 0%, #4752c4 100%);
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.3);
+        .section-title-icon {
+            animation: float 3s ease-in-out infinite;
         }
 
-        .view-gallery-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.5);
+        @media (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .lightbox-nav {
                 width: 40px;
                 height: 40px;
@@ -371,11 +304,16 @@
             .lightbox-next {
                 right: 10px;
             }
-            
+        }
+
+        @media (max-width: 480px) {
             .gallery-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
-                padding: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .gallery-item-title {
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -385,87 +323,6 @@
     <div id="toast" class="toast-notification">
         <i class="fas fa-check-circle mr-2"></i>
         <span>Link Fugi berhasil disalin!</span>
-    </div>
-
-    <!-- Modal Gallery Popup -->
-    <div id="galleryModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>
-                    <i class="fab fa-discord mr-2 text-indigo-400"></i>
-                    Discord Gallery - Celestial Demon Beast
-                </h3>
-                <button onclick="closeModal()" class="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="gallery-grid">
-                <!-- Gambar 1 -->
-                <div class="gallery-item" onclick="openLightbox(0)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/akanaken.png" alt="Akanaken Profile 1">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Akanaken Profile</div>
-                        <div class="gallery-item-subtitle">Main Avatar</div>
-                    </div>
-                </div>
-                <!-- Gambar 2 -->
-                <div class="gallery-item" onclick="openLightbox(1)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/cdb-banner.jpg" alt="CDB Banner" onerror="this.src='https://via.placeholder.com/400x400/5865F2/ffffff?text=CDB+Banner'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">CDB Banner</div>
-                        <div class="gallery-item-subtitle">Community Banner</div>
-                    </div>
-                </div>
-                <!-- Gambar 3 -->
-                <div class="gallery-item" onclick="openLightbox(2)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/event-1.jpg" alt="CDB Event 1" onerror="this.src='https://via.placeholder.com/400x400/4f46e5/ffffff?text=Event+1'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Event Night</div>
-                        <div class="gallery-item-subtitle">Gathering Session</div>
-                    </div>
-                </div>
-                <!-- Gambar 4 -->
-                <div class="gallery-item" onclick="openLightbox(3)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/event-2.jpg" alt="CDB Event 2" onerror="this.src='https://via.placeholder.com/400x400/8b5cf6/ffffff?text=Event+2'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Game Night</div>
-                        <div class="gallery-item-subtitle">Among Us Session</div>
-                    </div>
-                </div>
-                <!-- Gambar 5 -->
-                <div class="gallery-item" onclick="openLightbox(4)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/moderator-team.jpg" alt="Moderator Team" onerror="this.src='https://via.placeholder.com/400x400/3b82f6/ffffff?text=Mod+Team'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Moderator Team</div>
-                        <div class="gallery-item-subtitle">Staff Members</div>
-                    </div>
-                </div>
-                <!-- Gambar 6 -->
-                <div class="gallery-item" onclick="openLightbox(5)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/community-meet.jpg" alt="Community Meet" onerror="this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text=Community'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Community Meet</div>
-                        <div class="gallery-item-subtitle">Weekly Gathering</div>
-                    </div>
-                </div>
-                <!-- Gambar 7 -->
-                <div class="gallery-item" onclick="openLightbox(6)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/art-contest.jpg" alt="Art Contest" onerror="this.src='https://via.placeholder.com/400x400/a855f7/ffffff?text=Art+Contest'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Art Contest</div>
-                        <div class="gallery-item-subtitle">Fan Art Winners</div>
-                    </div>
-                </div>
-                <!-- Gambar 8 -->
-                <div class="gallery-item" onclick="openLightbox(7)">
-                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/birthday-celebration.jpg" alt="Birthday Celebration" onerror="this.src='https://via.placeholder.com/400x400/ec4899/ffffff?text=Birthday'">
-                    <div class="gallery-item-overlay">
-                        <div class="gallery-item-title">Birthday Celebration</div>
-                        <div class="gallery-item-subtitle">Member Birthday</div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Lightbox for full image view -->
@@ -584,16 +441,17 @@
         </div>
     </section>
 
-    <!-- Discord Section with Gallery Popup -->
+    <!-- Discord Section dengan Gallery Langsung -->
     <section id="discord" class="py-20 bg-gradient-to-b from-gray-900 to-black">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
-                <i class="fab fa-discord text-indigo-500 mr-3"></i>
+                <i class="fab fa-discord text-indigo-500 mr-3 section-title-icon"></i>
                 Discord Information
             </h2>
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-5xl mx-auto">
                 <div class="discord-section rounded-2xl p-8 md:p-12">
-                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <!-- Profile Section -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-10">
                         <!-- Foto Profil Discord -->
                         <div class="flex-shrink-0">
                             <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg shadow-indigo-500/30">
@@ -631,16 +489,11 @@
                                 </div>
                             </div>
                             
-                            <!-- Button Gallery dengan 8 Gambar -->
-                            <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                                <button onclick="openModal()" class="view-gallery-btn">
-                                    <i class="fas fa-images"></i>
-                                    View Gallery (8 Images)
-                                </button>
-                                
+                            <!-- Connect Button -->
+                            <div class="flex justify-center md:justify-start mb-6">
                                 <a href="https://discord.com/users/717098014145118299" 
                                    target="_blank"
-                                   class="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-indigo-600/30">
+                                   class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-indigo-600/30">
                                     <i class="fab fa-discord mr-2"></i>
                                     Connect on Discord
                                 </a>
@@ -653,16 +506,105 @@
                                     <code class="flex-grow bg-gray-900 px-4 py-3 rounded-lg text-indigo-300 font-mono text-sm border border-gray-700">
                                         https://fugi.celestial-demon-beast.xyz/akanaken
                                     </code>
-                                    <button onclick="copyFugiLink()" 
+                                    <button onclick="copyFugiLink(event)" 
                                             class="copy-btn px-6 py-3 bg-gray-800 text-indigo-400 rounded-lg font-semibold border border-indigo-500 flex items-center justify-center gap-2 hover:bg-indigo-600 hover:text-white transition-all">
                                         <i class="fas fa-copy"></i>
                                         Copy Link
                                     </button>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-3 text-center sm:text-left">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    Klik tombol copy atau link di atas untuk menyalin alamat Fugi
-                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Title -->
+                    <div class="text-center mb-6">
+                        <h4 class="text-2xl font-semibold text-indigo-400">
+                            <i class="fas fa-images mr-2"></i>
+                            Community Gallery
+                        </h4>
+                        <p class="text-gray-400 text-sm mt-2">Klik gambar untuk melihat dalam ukuran penuh</p>
+                    </div>
+
+                    <!-- Gallery Grid - 8 Gambar Tampil Langsung -->
+                    <div class="gallery-grid">
+                        <!-- Gambar 1 -->
+                        <div class="gallery-item" onclick="openLightbox(0)">
+                            <div class="gallery-badge">#1</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png" 
+                                 alt="Inactive REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/5865F2/ffffff?text=Profile'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Inactive Chibi REPO</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 2 -->
+                        <div class="gallery-item" onclick="openLightbox(1)">
+                            <div class="gallery-badge">#2</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png" 
+                                 alt="Active Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/4f46e5/ffffff?text=CDB+Banner'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Active Chibi REPO</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 3 -->
+                        <div class="gallery-item" onclick="openLightbox(2)">
+                            <div class="gallery-badge">#3</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png" 
+                                 alt="Mute Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/8b5cf6/ffffff?text=Event+Night'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Mute Chibi REPO</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 4 -->
+                        <div class="gallery-item" onclick="openLightbox(3)">
+                            <div class="gallery-badge">#4</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png" 
+                                 alt="Deafen Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/3b82f6/ffffff?text=Game+Night'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Deafen Chibi REPO</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 5 -->
+                        <div class="gallery-item" onclick="openLightbox(4)">
+                            <div class="gallery-badge">#5</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png" 
+                                 alt="Active Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text=Mod+Team'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Active Chibi</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 6 -->
+                        <div class="gallery-item" onclick="openLightbox(5)">
+                            <div class="gallery-badge">#6</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png" 
+                                 alt="Inactive Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/a855f7/ffffff?text=Community'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Inactive Chibi</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 7 -->
+                        <div class="gallery-item" onclick="openLightbox(6)">
+                            <div class="gallery-badge">#7</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png" 
+                                 alt="Mute Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/ec4899/ffffff?text=Art+Contest'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Mute Chibi</div>
+                            </div>
+                        </div>
+                        <!-- Gambar 8 -->
+                        <div class="gallery-item" onclick="openLightbox(7)">
+                            <div class="gallery-badge">#8</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png" 
+                                 alt="Deafen Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/f97316/ffffff?text=Birthday'">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-title">Deafen Chibi</div>
                             </div>
                         </div>
                     </div>
@@ -765,69 +707,43 @@
 
     <!-- JavaScript -->
     <script>
-        // Gallery images array
+        // Gallery images array for lightbox
         const galleryImages = [
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/akanaken.png",
-                title: "Akanaken Profile",
-                subtitle: "Main Avatar"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png",
+                fallback: "https://via.placeholder.com/800x800/5865F2/ffffff?text=Profile"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/cdb-banner.jpg",
-                title: "CDB Banner",
-                subtitle: "Community Banner",
-                fallback: "https://via.placeholder.com/400x400/5865F2/ffffff?text=CDB+Banner"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png",
+                fallback: "https://via.placeholder.com/800x800/4f46e5/ffffff?text=CDB+Banner"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/event-1.jpg",
-                title: "Event Night",
-                subtitle: "Gathering Session",
-                fallback: "https://via.placeholder.com/400x400/4f46e5/ffffff?text=Event+1"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png",
+                fallback: "https://via.placeholder.com/800x800/8b5cf6/ffffff?text=Event+Night"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/event-2.jpg",
-                title: "Game Night",
-                subtitle: "Among Us Session",
-                fallback: "https://via.placeholder.com/400x400/8b5cf6/ffffff?text=Event+2"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png",
+                fallback: "https://via.placeholder.com/800x800/3b82f6/ffffff?text=Game+Night"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/moderator-team.jpg",
-                title: "Moderator Team",
-                subtitle: "Staff Members",
-                fallback: "https://via.placeholder.com/400x400/3b82f6/ffffff?text=Mod+Team"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png",
+                fallback: "https://via.placeholder.com/800x800/6366f1/ffffff?text=Mod+Team"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/community-meet.jpg",
-                title: "Community Meet",
-                subtitle: "Weekly Gathering",
-                fallback: "https://via.placeholder.com/400x400/6366f1/ffffff?text=Community"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png",
+                fallback: "https://via.placeholder.com/800x800/a855f7/ffffff?text=Community"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/art-contest.jpg",
-                title: "Art Contest",
-                subtitle: "Fan Art Winners",
-                fallback: "https://via.placeholder.com/400x400/a855f7/ffffff?text=Art+Contest"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png",
+                fallback: "https://via.placeholder.com/800x800/ec4899/ffffff?text=Art+Contest"
             },
             {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/birthday-celebration.jpg",
-                title: "Birthday Celebration",
-                subtitle: "Member Birthday",
-                fallback: "https://via.placeholder.com/400x400/ec4899/ffffff?text=Birthday"
+                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png",
+                fallback: "https://via.placeholder.com/800x800/f97316/ffffff?text=Birthday"
             }
         ];
 
         let currentImageIndex = 0;
-
-        // Modal functions
-        function openModal() {
-            document.getElementById('galleryModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('galleryModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
 
         // Lightbox functions
         function openLightbox(index) {
@@ -839,7 +755,7 @@
             const img = galleryImages[index];
             lightboxImage.src = img.src;
             lightboxImage.onerror = function() {
-                this.src = img.fallback || 'https://via.placeholder.com/800x800/5865F2/ffffff?text=Image+Not+Found';
+                this.src = img.fallback;
             };
             
             updateLightboxCounter();
@@ -858,7 +774,7 @@
             const img = galleryImages[currentImageIndex];
             lightboxImage.src = img.src;
             lightboxImage.onerror = function() {
-                this.src = img.fallback || 'https://via.placeholder.com/800x800/5865F2/ffffff?text=Image+Not+Found';
+                this.src = img.fallback;
             };
             updateLightboxCounter();
         }
@@ -869,7 +785,7 @@
             const img = galleryImages[currentImageIndex];
             lightboxImage.src = img.src;
             lightboxImage.onerror = function() {
-                this.src = img.fallback || 'https://via.placeholder.com/800x800/5865F2/ffffff?text=Image+Not+Found';
+                this.src = img.fallback;
             };
             updateLightboxCounter();
         }
@@ -879,31 +795,27 @@
                 `${currentImageIndex + 1}/${galleryImages.length}`;
         }
 
-        // Close modal on escape key
+        // Keyboard navigation for lightbox
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-                closeLightbox();
-            }
-            if (e.key === 'ArrowRight' && document.getElementById('lightboxOverlay').classList.contains('active')) {
-                nextImage();
-            }
-            if (e.key === 'ArrowLeft' && document.getElementById('lightboxOverlay').classList.contains('active')) {
-                prevImage();
+            if (document.getElementById('lightboxOverlay').classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+                if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+                if (e.key === 'ArrowLeft') {
+                    prevImage();
+                }
             }
         });
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('galleryModal');
-            const lightbox = document.getElementById('lightboxOverlay');
-            if (event.target === modal) {
-                closeModal();
-            }
-            if (event.target === lightbox) {
+        // Close lightbox when clicking outside
+        document.getElementById('lightboxOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
                 closeLightbox();
             }
-        };
+        });
 
         // Copy Fugi Link Function
         function copyFugiLink(event) {
