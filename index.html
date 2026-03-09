@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
+
 <head>
   <title>Celestial Demon Beast - Home</title>
   <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -53,23 +54,27 @@
       background-color: #0a0a0b;
       color: #e5e7eb;
     }
+
     .glass-card {
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.05);
       transition: all 0.3s ease;
     }
+
     .glass-card:hover {
       background: rgba(255, 255, 255, 0.06);
       border-color: rgba(99, 102, 241, 0.3);
       transform: translateY(-5px);
     }
+
     .hero-bg {
-      background-image: linear-gradient(to bottom, rgba(10, 10, 11, 0.7), rgba(10, 10, 11, 1)), 
-                        url("Asset/Futaki_Empire_Thumbnail.jpg");
+      background-image: linear-gradient(to bottom, rgba(10, 10, 11, 0.7), rgba(10, 10, 11, 1)),
+        url("Asset/Futaki_Empire_Thumbnail.jpg");
       background-position: center;
       background-size: cover;
     }
+
     .text-gradient {
       background: linear-gradient(to right, #818cf8, #c084fc);
       -webkit-background-clip: text;
@@ -79,8 +84,11 @@
   </style>
 </head>
 
-<body class="font-sans">
-  <audio id="fireworkSound" src="fireworks-107116.mp3" preload="auto"></audio>  
+<body class="font-sans pt-20">
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+  <script type="module" src="Asset/load_navbar.js"></script>
+  <audio id="fireworkSound" src="fireworks-107116.mp3" preload="auto"></audio>
 
   <!-- Navbar Placeholder -->
   <div id="navbar-placeholder"></div>
@@ -95,10 +103,12 @@
         Tempat berkumpulnya individu-individu unik dengan tingkat kebagongan level tinggi.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#about" class="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white font-semibold rounded-xl transition-all shadow-lg shadow-accent-primary/20">
+        <a href="#about"
+          class="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white font-semibold rounded-xl transition-all shadow-lg shadow-accent-primary/20">
           Learn More
         </a>
-        <a href="https://discord.gg/reSrCQkepd" target="_blank" class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl transition-all backdrop-blur-sm">
+        <a href="https://discord.gg/reSrCQkepd" target="_blank"
+          class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl transition-all backdrop-blur-sm">
           Join Discord
         </a>
       </div>
@@ -108,7 +118,7 @@
   <!-- About Section -->
   <section id="about" class="py-24 px-4 bg-dark-lighter relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-    
+
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">ABOUT THE COMMUNITY</h2>
@@ -122,7 +132,8 @@
         <div class="glass-card p-8 rounded-3xl">
           <h3 class="text-2xl font-bold mb-4 text-white">Visi & Misi</h3>
           <p class="text-gray-400 leading-relaxed mb-6">
-            Celestial Demon Beast adalah sebuah komunitas yang akan menghibur para member dengan kebagongan yang High Level. Kami percaya bahwa setiap orang butuh tempat untuk mengekspresikan diri tanpa batas.
+            Celestial Demon Beast adalah sebuah komunitas yang akan menghibur para member dengan kebagongan yang High
+            Level. Kami percaya bahwa setiap orang butuh tempat untuk mengekspresikan diri tanpa batas.
           </p>
           <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-xl">
             <p class="text-red-400 text-sm italic">
@@ -131,11 +142,14 @@
             </p>
           </div>
         </div>
-        
+
         <div class="relative group">
-          <div class="absolute -inset-1 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+          <div
+            class="absolute -inset-1 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000">
+          </div>
           <div class="relative glass-card p-1 items-center justify-center overflow-hidden rounded-3xl">
-            <img src="Asset/Logo CDB.gif" alt="CDB Logo" class="w-full rounded-2xl grayscale group-hover:grayscale-0 transition-all duration-700">
+            <img src="Asset/Logo CDB.gif" alt="CDB Logo"
+              class="w-full rounded-2xl grayscale group-hover:grayscale-0 transition-all duration-700">
           </div>
         </div>
       </div>
@@ -146,17 +160,20 @@
   <section class="py-24 px-4 bg-dark">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">FAMILY EMPIRE</h2>
-      
+
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Celestial Demon Beast Server Card -->
         <div class="glass-card p-6 rounded-3xl group">
           <div class="relative overflow-hidden rounded-2xl mb-6 aspect-video">
-            <img src="Asset/Logo CDB.gif" alt="CDB" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <img src="Asset/Logo CDB.gif" alt="CDB"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
           </div>
           <h3 class="text-xl font-bold mb-2">Celestial Demon Beast</h3>
           <p class="text-accent-primary text-sm font-medium mb-4 uppercase tracking-wider">Primary Server</p>
-          
+
           <div class="space-y-3 mb-8">
             <div class="flex items-center text-sm text-gray-400">
               <i class="fa fa-user-tie w-6 text-indigo-400"></i>
@@ -167,8 +184,9 @@
               <span>Location: Indonesia</span>
             </div>
           </div>
-          
-          <a href="https://discord.gg/reSrCQkepd" target="_blank" class="block text-center py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium transition-all">
+
+          <a href="https://discord.gg/reSrCQkepd" target="_blank"
+            class="block text-center py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium transition-all">
             Join Server
           </a>
         </div>
@@ -250,4 +268,5 @@
       .then(d => document.getElementById('footer-placeholder').innerHTML = d);
   </script>
 </body>
-</html>
+
+</html>
