@@ -1,178 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline Generator</title>
-    <!-- Bootstrap CSS CDN -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- HTML2PDF Library CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
+  <title>Celestial Demon Beast - Timeline Generator</title>
+  <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Scripts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script src="Asset/Proses.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0b',
+            'dark-lighter': '#161618',
+            accent: { primary: '#6366f1', secondary: '#a855f7' }
+          },
+          fontFamily: { sans: ['Outfit', 'sans-serif'] }
         }
-        .timeline-container {
-            width: 100%;
-            overflow-x: auto;
-            padding-top: 20px;
-        }
-        .timeline-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .timeline-phase {
-            flex: 1 1 18%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 10px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .timeline-phase h2 {
-            font-size: 18px;
-            color: #333;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-        .timeline-event {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #eee;
-            border-radius: 5px;
-            position: relative;
-        }
-        .timeline-event:before {
-            content: "";
-            position: absolute;
-            left: -10px;
-            top: 10px;
-            width: 10px;
-            height: 10px;
-            background-color: #333;
-            border-radius: 50%;
-        }
-        .timeline-event span {
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #0a0a0b; color: #e5e7eb; }
+    .glass-card { 
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(10px); 
+      border: 1px solid rgba(255, 255, 255, 0.05); 
+    }
+    .text-gradient { 
+      background: linear-gradient(to right, #818cf8, #c084fc); 
+      -webkit-background-clip: text; 
+      background-clip: text;
+      -webkit-text-fill-color: transparent; 
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1 class="text-center">Timeline Generator</h1>
-        <form id="timelineForm" class="mb-4">
-            <div class="form-group">
-                <label for="phase">Phase:</label>
-                <input type="text" class="form-control" id="phase" name="phase" required>
-            </div>
-            <div class="form-group">
-                <label for="event">Event:</label>
-                <input type="text" class="form-control" id="event" name="event" required>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="endDate">End Date:</label>
-                    <input type="date" class="form-control" id="endDate" name="endDate" required>
-                </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-block" onclick="addEvent()">Add Event</button>
-        </form>
-        <button class="btn btn-success mb-4" onclick="printPDF()">Print PDF</button>
-        <div class="timeline-container">
-            <div class="timeline" id="timeline">
-                <!-- Timeline content will be added here dynamically -->
-            </div>
-        </div>
+
+<body class="font-sans pt-20">
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+  <script type="module" src="Asset/load_navbar.js"></script>
+
+  <main class="max-w-7xl mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">TIMELINE <span class="text-gradient">GENERATOR</span></h1>
+      <p class="text-gray-400">Buat rencana masa depan komunikasmu dengan visualisasi yang indah.</p>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- Input Form -->
+      <div class="lg:col-span-1">
+        <form id="timelineForm" class="glass-card p-8 rounded-[2rem] sticky top-24">
+          <h2 class="text-xl font-bold mb-6 text-white">Tambah Event</h2>
+          
+          <div class="space-y-6">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Phase / Kategori</label>
+              <input type="text" id="phase" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-primary outline-none transition-colors" placeholder="Contoh: Development" required>
+            </div>
 
-    <script>
-        let phases = {};
-        let phaseCount = 0;
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nama Event</label>
+              <input type="text" id="event" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-primary outline-none transition-colors" placeholder="Contoh: Alpha Launch" required>
+            </div>
 
-        function addEvent() {
-            const phase = document.getElementById('phase').value;
-            const event = document.getElementById('event').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Mulai</label>
+                <input type="date" id="startDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-primary outline-none transition-colors" required>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Selesai</label>
+                <input type="date" id="endDate" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-primary outline-none transition-colors" required>
+              </div>
+            </div>
 
-            if (phase && event && startDate && endDate) {
-                if (!phases[phase]) {
-                    phases[phase] = [];
-                }
+            <button type="button" onclick="addEvent()" class="w-full py-4 bg-accent-primary hover:bg-accent-primary/90 text-white font-bold rounded-2xl transition-all shadow-lg shadow-accent-primary/20">
+              Tambahkan ke Timeline
+            </button>
+            
+            <button type="button" onclick="printPDF()" class="w-full py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all">
+              <i class="fa fa-file-pdf mr-2"></i> Ekspor PDF
+            </button>
+          </div>
+        </form>
+      </div>
 
-                phases[phase].push({ event, startDate, endDate });
-                renderTimeline();
+      <!-- Preview Area -->
+      <div class="lg:col-span-2">
+        <div class="timeline-container bg-dark-lighter/30 rounded-[2.5rem] p-10 min-h-[600px] border border-white/5">
+          <div id="timeline" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Dynamic Content -->
+            <div class="col-span-full flex flex-col items-center justify-center h-[500px] text-gray-600">
+              <i class="fa fa-layer-group text-6xl mb-6 opacity-20"></i>
+              <p class="font-medium italic">Belum ada data event. Tambahkan event baru di panel kiri.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-                document.getElementById('timelineForm').reset();
-            } else {
-                alert('Please fill in all fields.');
-            }
-        }
+  <script>
+    let phases = {};
 
-        function renderTimeline() {
-            const timeline = document.getElementById('timeline');
-            timeline.innerHTML = '';
-            phaseCount = 0;
+    function addEvent() {
+      const phase = document.getElementById('phase').value;
+      const event = document.getElementById('event').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
 
-            let rowDiv = document.createElement('div');
-            rowDiv.classList.add('timeline-row');
-            timeline.appendChild(rowDiv);
+      if (phase && event && startDate && endDate) {
+        if (!phases[phase]) phases[phase] = [];
+        phases[phase].push({ event, startDate, endDate });
+        renderTimeline();
+        document.getElementById('timelineForm').reset();
+      } else {
+        alert('Mohon isi semua field.');
+      }
+    }
 
-            for (const phase in phases) {
-                if (phaseCount % 4 === 0 && phaseCount !== 0) {
-                    rowDiv = document.createElement('div');
-                    rowDiv.classList.add('timeline-row');
-                    timeline.appendChild(rowDiv);
-                }
+    function renderTimeline() {
+      const container = document.getElementById('timeline');
+      container.innerHTML = '';
 
-                const phaseDiv = document.createElement('div');
-                phaseDiv.classList.add('timeline-phase');
+      for (const phase in phases) {
+        const phaseEl = document.createElement('div');
+        phaseEl.className = 'glass-card p-8 rounded-[2rem] flex flex-col h-fit';
+        
+        phaseEl.innerHTML = `
+          <h2 class="text-xl font-bold mb-6 text-accent-primary flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-accent-primary shadow-[0_0_10px_#6366f1]"></span>
+            ${phase}
+          </h2>
+          <div class="space-y-4 relative border-l-2 border-white/5 ml-1 pl-6">
+            ${phases[phase].map(item => `
+              <div class="relative">
+                <div class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-white/10 border-2 border-dark"></div>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">${item.startDate} — ${item.endDate}</p>
+                <p class="text-white font-medium">${item.event}</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(phaseEl);
+      }
+    }
 
-                const phaseTitle = document.createElement('h2');
-                phaseTitle.innerText = phase;
-                phaseDiv.appendChild(phaseTitle);
+    function printPDF() {
+      const element = document.querySelector('.timeline-container');
+      const opt = {
+        margin: 10,
+        filename: 'CDB-Timeline.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, backgroundColor: '#0a0a0b' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+  </script>
 
-                phases[phase].forEach(event => {
-                    const eventDiv = document.createElement('div');
-                    eventDiv.classList.add('timeline-event');
-                    eventDiv.innerHTML = `<span>${event.startDate} - ${event.endDate}</span><br>${event.event}`;
-                    phaseDiv.appendChild(eventDiv);
-                });
-
-                rowDiv.appendChild(phaseDiv);
-                phaseCount++;
-            }
-        }
-
-        function printPDF() {
-            const element = document.querySelector('.timeline-container');
-            html2pdf()
-                .from(element)
-                .set({
-                    margin: 1,
-                    filename: 'timeline.pdf',
-                    html2canvas: { scale: 2 },
-                    jsPDF: { orientation: 'landscape' }
-                })
-                .save();
-        }
-    </script>
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('Footer.html')
+      .then(r => r.text())
+      .then(d => document.getElementById('footer-placeholder').innerHTML = d);
+  </script>
 </body>
 </html>
+

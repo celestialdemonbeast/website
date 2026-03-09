@@ -1,136 +1,150 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feature CDB</title>
-    <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="Asset/Proses.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        #panduanModal1 .modal-dialog {
-    max-width: 50%;
-}
+  <title>Celestial Demon Beast - Features</title>
+  <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Scripts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="Asset/Proses.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0b',
+            'dark-lighter': '#161618',
+            accent: { primary: '#6366f1', secondary: '#a855f7' }
+          },
+          fontFamily: { sans: ['Outfit', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000;
-        }
-        .resource-card {
-            transition: all 0.3s ease;
-            border: 1px solid #2d3748;
-        }
-        .resource-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+  <style>
+    body { background-color: #0a0a0b; color: #e5e7eb; }
+    .glass-card { 
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(10px); 
+      border: 1px solid rgba(255, 255, 255, 0.05); 
+      transition: all 0.3s ease; 
+    }
+    .text-gradient { 
+      background: linear-gradient(to right, #818cf8, #c084fc); 
+      -webkit-background-clip: text; 
+      background-clip: text;
+      -webkit-text-fill-color: transparent; 
+    }
+    .resource-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(99, 102, 241, 0.3);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  </style>
 </head>
 
-  <body onload="loadNavbar()">
-  
-    <!-- Placeholder for Navbar -->
-    <div id="navbar-placeholder"></div><br><br>
-    <script type="module" src="Asset/load_navbar.js"></script>
-  
-   
-  <br><br>
-    <div class="container mx-auto" id="home-container">
-        <h1 class="text-3xl text-gray-400 font-bold mb-8">Developer Resources</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="resources-container">
-            <!-- Resources will be loaded here -->
-        </div>
+<body class="font-sans pt-20">
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+  <script type="module" src="Asset/load_navbar.js"></script>
+
+  <main class="max-w-7xl mx-auto px-4 py-16">
+    <div class="text-center mb-20 animate-fade-in">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">POWERFUL <span class="text-gradient">FEATURES</span></h1>
+      <p class="text-gray-400 max-w-2xl mx-auto">Kumpulan tools dan eksperimen digital kami untuk membantu produktivitasmu.</p>
     </div>
 
-    <script>
-        // JSON data for resources
-        const resources = 
-[
-    {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="resources-container">
+      <!-- Resources will be loaded here via JS -->
+    </div>
+  </main>
+
+  <script>
+    const resources = [
+      {
         "title": "Generator Widget waktu",
-        "description": "Framework CSS utility-first yang memungkinkan Anda membangun desain custom langsung di markup.",
+        "description": "Custom jam widget framework yang memungkinkan Anda membangun desain waktu langsung di markup.",
         "url": "https://feature-cdb.netlify.app/Time-Generator/Widget-Jam",
         "image": "https://feature-cdb.netlify.app/Asset/Date-Time.png"
-    },
-    {
+      },
+      {
         "title": "Livechat Youtube",
-        "description": "Website ini menampilkan tampilan live chat ala YouTube yang dibuat hanya dengan HTML dan CSS, lengkap dengan avatar, nama pengguna, dan pesan bergulir dalam layout responsif. Desainnya bersih dan modern, cocok sebagai inspirasi UI untuk proyek web interaktif, serta bisa dikembangkan lebih lanjut menjadi sistem chat nyata dengan integrasi API.",
+        "description": "Tampilan live chat ala YouTube responsif dengan avatar, nama pengguna, dan pesan bergulir.",
         "url": "https://feature-cdb.netlify.app/css-livechat-youtube",
         "image": "https://feature-cdb.netlify.app/Livechat%20Icon.png"
-    },
-    {
+      },
+      {
         "title": "Link to QR Code",
-        "description": "Halaman ini menyediakan alat pembuat QR Code serbaguna yang memungkinkan pengguna menghasilkan kode untuk teks, tautan, atau data lainnya secara instan. Antarmukanya sederhana, responsif, dan gratis, cocok untuk kebutuhan pribadi maupun profesional tanpa menyimpan data pengguna.",
+        "description": "Alat pembuat QR Code serbaguna untuk teks, tautan, atau data lainnya secara instan.",
         "url": "https://feature-cdb.netlify.app/qr/qr_code",
         "image": "https://feature-cdb.netlify.app/Asset/link to QR Code.png"
-    },
-    {
+      },
+      {
         "title": "Wifi to QR Code",
-        "description": "Tool ini memungkinkan pengguna membuat QR Code WiFi secara instan dan aman, dengan antarmuka bersih, responsif, dan bebas iklan. Cocok untuk rumah atau bisnis, mudah digunakan, mendukung berbagai jenis enkripsi, dan tidak menyimpan data pribadi.",
+        "description": "Buat QR Code WiFi secara instan dan aman untuk rumah atau bisnis Anda.",
         "url": "https://feature-cdb.netlify.app/qr/wifi_qr.html",
         "image": "https://feature-cdb.netlify.app/Asset/wifi to QR Code.png"
-    },
-    {
+      },
+      {
         "title": "Calc-Net",
-        "description": "Halaman ini menampilkan kalkulator IP Network, Binary Code, Satuan Data, Kecepatan Data, Kelistrikan.",
+        "description": "Kalkulator IP Network, Binary, Satuan Data, Kecepatan, dan Kelistrikan.",
         "url": "https://feature-cdb.netlify.app/calcnet/menu.html",
         "image": "https://feature-cdb.netlify.app/Asset/Calcnet.png"
-    },
-    {
+      },
+      {
         "title": "PixPDF",
-        "description": "Tools PixPDF adalah sebuah konverter PDF menjadi sebuah PNG",
+        "description": "Tools konversi file PDF menjadi gambar PNG dengan kualitas tinggi.",
         "url": "https://feature-cdb.netlify.app/Konverter/PixPDF.html",
         "image": "https://feature-cdb.netlify.app/Asset/PixPDF.png"
+      }
+    ];
+
+    function createCard(resource) {
+      return `
+        <div class="resource-card glass-card rounded-[2rem] overflow-hidden flex flex-col group">
+          <div class="h-52 bg-white/5 flex items-center justify-center p-8 transition-colors group-hover:bg-white/10">
+            <img src="${resource.image}" alt="${resource.title}" class="max-h-full max-w-full object-contain filter drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-500">
+          </div>
+          <div class="p-8 flex flex-col flex-1">
+            <h3 class="text-2xl font-bold mb-3 text-white">${resource.title}</h3>
+            <p class="text-gray-400 mb-8 flex-1 leading-relaxed">${resource.description}</p>
+            <div class="flex items-center justify-between border-t border-white/5 pt-6">
+              <span class="text-xs text-gray-500 font-mono truncate max-w-[50%]">${resource.url.replace(/^https?:\/\//, '')}</span>
+              <a href="${resource.url}" target="_blank" class="px-6 py-2.5 bg-accent-primary hover:bg-accent-primary/90 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-accent-primary/20">
+                Kunjungi <i class="fa fa-external-link text-[10px] ml-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
     }
-];
 
-        // Function to create card HTML
-        function createCard(resource) {
-            return `
-                <div class="resource-card bg-gray-900 rounded-lg overflow-hidden shadow-lg border border-gray-800">
-                    <div class="h-48 bg-gray-800 flex items-center justify-center p-4">
-                        <img src="${resource.image}" alt="${resource.title}" class="max-h-full text-gray-400 max-w-full object-contain">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl text-gray-400 font-bold mb-2">${resource.title}</h3>
-                        <p class="text-gray-400 mb-4">${resource.description}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-400 truncate max-w-[60%]">${resource.url.replace(/^https?:\/\//, '')}</span>
-                            <a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition duration-300">
-                                Kunjungi
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+    function renderResources() {
+      const container = document.getElementById('resources-container');
+      resources.forEach(resource => {
+        container.innerHTML += createCard(resource);
+      });
+    }
 
-        // Function to render resources
-        function renderResources() {
-            const container = document.getElementById('resources-container');
-            
-            resources.forEach(resource => {
-                container.innerHTML += createCard(resource);
-            });
-        }
+    document.addEventListener('DOMContentLoaded', renderResources);
+  </script>
 
-        // Render resources when page loads
-        document.addEventListener('DOMContentLoaded', renderResources);
-    </script>
-    <footer class="w3-center w3-black w3-padding-64">
-    <a href="#home-container" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
-    
-   <p class="w3-small">Website Ini bertujuan untuk Memperkenalkan Apa itu komunitas <b><U> Pemberi Tau Empire</U></b></p>
-  </footer>
-  
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('Footer.html')
+      .then(r => r.text())
+      .then(d => document.getElementById('footer-placeholder').innerHTML = d);
+  </script>
 </body>
 </html>

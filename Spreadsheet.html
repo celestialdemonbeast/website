@@ -1,92 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZilkyHandycraft Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
+  <title>Celestial Demon Beast - Spreadsheet Sync</title>
+  <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Scripts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="Asset/Proses.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0b',
+            'dark-lighter': '#161618',
+            accent: { primary: '#6366f1', secondary: '#a855f7' }
+          },
+          fontFamily: { sans: ['Outfit', 'sans-serif'] }
         }
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background-color: #6200ea;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-size: 24px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #0a0a0b; color: #e5e7eb; }
+    .glass-card { 
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(10px); 
+      border: 1px solid rgba(255, 255, 255, 0.05); 
+    }
+    .text-gradient { 
+      background: linear-gradient(to right, #818cf8, #c084fc); 
+      -webkit-background-clip: text; 
+      background-clip: text;
+      -webkit-text-fill-color: transparent; 
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">ZilkyHandycraft</div>
-        <div class="form-group">
-            <label for="spreadsheetUrl">Spreadsheet URL</label>
-            <input type="text" id="spreadsheetUrl" placeholder="Enter Spreadsheet URL">
-        </div>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" readonly>
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" readonly>
-        </div>
-        <div class="form-group">
-            <label for="phone">Your Phone</label>
-            <input type="text" id="phone" readonly>
-        </div>
-        <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" rows="4" readonly></textarea>
-        </div>
-        <button onclick="fetchData()">Fetch Data</button>
+
+<body class="font-sans pt-20">
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+  <script type="module" src="Asset/load_navbar.js"></script>
+
+  <main class="max-w-3xl mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">SPREADSHEET <span class="text-gradient">SYNC</span></h1>
+      <p class="text-gray-400">Hubungkan data kerajinan tangan Zilky langsung dari Google Sheets.</p>
     </div>
 
-    <script>
-        function fetchData() {
-            const url = document.getElementById('https://docs.google.com/spreadsheets/d/19ro8cfaX6ZSuSgAul9Eyc1y6tnoZYdhk0RagctxNAZo/edit?usp=sharing').value;
-            const sheetId = url.match(/spreadsheets\/d\/([a-zA-Z0-9-_]+)/)[1];
-            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=YOUR_API_KEY`;
+    <div class="glass-card p-8 md:p-12 rounded-[2.5rem] shadow-2xl">
+      <div class="space-y-8">
+        <!-- URL Input -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Google Spreadsheet URL</label>
+          <div class="relative">
+            <input type="text" id="spreadsheetUrl" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-accent-primary outline-none transition-all pr-32" placeholder="https://docs.google.com/spreadsheets/d/...">
+            <button onclick="fetchData()" class="absolute right-2 top-2 bottom-2 px-6 bg-accent-primary hover:bg-accent-primary/90 text-white font-bold rounded-xl transition-all text-sm">
+              Fetch Data
+            </button>
+          </div>
+        </div>
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const rows = data.values;
-                    if (rows.length > 1) {
-                        const form = rows[1]; // Menggunakan data pertama untuk contoh
-                        document.getElementById('name').value = form[1];
-                        document.getElementById('email').value = form[2];
-                        document.getElementById('phone').value = form[3];
-                        document.getElementById('message').value = form[4];
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nama Pengrajin</label>
+            <input type="text" id="name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none cursor-not-allowed opacity-60" readonly>
+          </div>
+          <!-- Email -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email</label>
+            <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none cursor-not-allowed opacity-60" readonly>
+          </div>
+          <!-- Phone -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nomor Telepon</label>
+            <input type="text" id="phone" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none cursor-not-allowed opacity-60" readonly>
+          </div>
+          <!-- Status indicator for the UI -->
+          <div class="flex items-end">
+            <div id="status-box" class="w-full p-3 rounded-xl bg-white/5 border border-white/5 text-center text-xs font-bold text-gray-500 uppercase">
+              Ready to Sync
+            </div>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Pesan / Catatan</label>
+          <textarea id="message" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none cursor-not-allowed opacity-60 resize-none" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function fetchData() {
+      const urlInput = document.getElementById('spreadsheetUrl').value;
+      if (!urlInput) {
+        alert('Mohon masukkan URL Spreadsheet.');
+        return;
+      }
+
+      const match = urlInput.match(/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+      if (!match) {
+        alert('URL tidak valid.');
+        return;
+      }
+
+      const sheetId = match[1];
+      const statusBox = document.getElementById('status-box');
+      statusBox.innerText = 'Syncing...';
+      statusBox.classList.add('text-accent-primary');
+
+      // Note: In a real scenario, YOUR_API_KEY should be replaced or handled via backend
+      const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=YOUR_API_KEY`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          if (rows && rows.length > 1) {
+            const form = rows[1]; 
+            document.getElementById('name').value = form[1] || '';
+            document.getElementById('email').value = form[2] || '';
+            document.getElementById('phone').value = form[3] || '';
+            document.getElementById('message').value = form[4] || '';
+            statusBox.innerText = 'Data Synced';
+            statusBox.classList.replace('text-accent-primary', 'text-green-400');
+          } else {
+            alert('Tidak ada data ditemukan.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          statusBox.innerText = 'Sync Failed';
+          statusBox.classList.replace('text-accent-primary', 'text-red-400');
+        });
+    }
+  </script>
+
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('Footer.html')
+      .then(r => r.text())
+      .then(d => document.getElementById('footer-placeholder').innerHTML = d);
+  </script>
 </body>
 </html>
+

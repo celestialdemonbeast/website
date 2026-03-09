@@ -1,798 +1,215 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id" class="scroll-smooth">
 <head>
-  <title>Activity</title>
+  <title>Celestial Demon Beast - Activity</title>
   <link rel="icon" type="image/png" href="Asset/Logo [Dasar].png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://akanaken.w3spaces.com/aktivity_style.css">
-  <link rel="stylesheet" href="style.css">
-
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Scripts & Styles -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="App/Event/event-style.css">
-
   <script src="Asset/Proses.js"></script>
-</head>
-
-<body onload="loadNavbar()">
-
-
-  <!-- Placeholder for Navbar -->
-  <div id="navbar-placeholder"></div><br><br>
-  <script type="module" src="Asset/load_navbar.js"></script>
-
- 
-
-
-
-  <!-- About Section -->
-  
-
-
-  
   
   <script>
-      window.addEventListener("message", function(event) {
-          if (event.data.type === "resizeIframe") {
-              var iframe = document.getElementById("eventFrame");
-              if (iframe) {
-                  iframe.style.height = event.data.height + "px";
-              }
-          }
-      });
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0b',
+            'dark-lighter': '#161618',
+            accent: { primary: '#6366f1', secondary: '#a855f7' }
+          },
+          fontFamily: { sans: ['Outfit', 'sans-serif'] }
+        }
+      }
+    }
   </script>
-  
-  
 
+  <style>
+    body { background-color: #0a0a0b; color: #e5e7eb; }
+    .glass-card { 
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(10px); 
+      border: 1px solid rgba(255, 255, 255, 0.05); 
+      transition: all 0.3s ease; 
+    }
+    .glass-card:hover { 
+      background: rgba(255, 255, 255, 0.06); 
+      border-color: rgba(99, 102, 241, 0.3); 
+    }
+    .text-gradient { 
+      background: linear-gradient(to right, #818cf8, #c084fc); 
+      -webkit-background-clip: text; 
+      background-clip: text;
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    /* Modern Overrides for Event System */
+    .hero-banner {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.3);
+    }
+    .category-btn {
+      color: #9ca3af;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .category-btn.active {
+      color: white;
+      background: #6366f1;
+      border-color: #6366f1;
+    }
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(8px);
+    }
+    .detail-card {
+        background: #161618;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 2rem;
+        color: #e5e7eb;
+    }
+  </style>
+</head>
 
-    <!-- Event -->
+<body class="font-sans pt-20">
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+  <script type="module" src="Asset/load_navbar.js"></script>
 
-     <header class="py-4 px-6 text-center">
-    <div class="max-w-6xl mx-auto">
-      <!-- <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Kalender Hari Penting Indonesia</h1>
-      <p class="text-gray-600 mt-2">Temukan dan pelajari tentang berbagai hari penting nasional</p> -->
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-12">
+    <!-- Page Header -->
+    <div class="text-center mb-16 animate-fade-in">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">COMMUNITY <span class="text-gradient">ACTIVITIES</span></h1>
+      <p class="text-gray-400 max-w-2xl mx-auto">Pantau terus kegiatan dan hari-hari besar di komunitas Celestial Demon Beast.</p>
     </div>
-  </header>
 
-  <!-- Banner Hari Penting Hari Ini -->
-  <section class="hero-banner text-white py-8 px-6 mb-10">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
-      <div class="flex-1 text-center md:text-left">
-        <span class="today-badge px-4 py-1 rounded-full text-white text-sm font-bold inline-flex items-center">
-          <i class="fas fa-star mr-2"></i> Hari Penting Saat Ini
-        </span>
-        <h2 class="text-3xl md:text-4xl font-bold mt-4" id="todayTitle">Hari Kemerdekaan RI</h2>
-        <p class="text-xl opacity-90 mt-2" id="todayDate">17 Agustus 2025</p>
-        <p class="mt-4 max-w-2xl" id="todayDescription">Peringatan kemerdekaan Republik Indonesia yang ke-80. Mari kita lanjutkan perjuangan para pahlawan dengan mengisi kemerdekaan melalui karya dan prestasi.</p>
-        <button id="todayDetailBtn" class="mt-6 bg-white/20 hover:bg-white/30 border border-white/30 px-6 py-2 rounded-full transition-all">
-          Lihat Detail <i class="fas fa-arrow-right ml-2"></i>
-        </button>
-      </div>
-      <div class="mt-6 md:mt-0 flex justify-center">
-        <div class="bg-white/20 rounded-full w-32 h-32 flex items-center justify-center">
-          <span class="text-5xl" id="todayEmoji">🇮🇩</span>
+    <!-- Banner Hari Penting Hari Ini -->
+    <section class="hero-banner p-8 md:p-12 mb-16 relative overflow-hidden group">
+      <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+        <div class="flex-1 text-center md:text-left">
+          <span class="inline-flex items-center gap-2 px-4 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-widest text-white">
+            <i class="fas fa-star text-yellow-300"></i> Hari Penting Saat Ini
+          </span>
+          <h2 class="text-4xl md:text-5xl font-bold mt-6 text-white" id="todayTitle">Memuat...</h2>
+          <p class="text-xl opacity-80 mt-2 font-medium" id="todayDate"></p>
+          <p class="mt-6 text-indigo-100 max-w-2xl leading-relaxed text-lg" id="todayDescription"></p>
+          <button id="todayDetailBtn" class="mt-8 inline-flex items-center gap-2 px-8 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-xl">
+            Lihat Detail <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="bg-white/20 backdrop-blur-md rounded-full w-40 h-40 flex items-center justify-center border-4 border-white/30 shadow-2xl">
+            <span class="text-7xl drop-shadow-lg" id="todayEmoji">📅</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-
-  <!-- New Year Countdown Overlay -->
-<div id="newYearOverlay" class="new-year-overlay">
-  <button class="close-countdown" onclick="closeCountdown()">
-    <i class="fas fa-times"></i>
-  </button>
-  
-  <div class="countdown-container">
-    <h1 class="countdown-title">🎉 Menuju Tahun Baru 2026 🎉</h1>
-    <div class="countdown-timer">
-      <div class="countdown-unit">
-        <div class="countdown-number" id="countdown-hours">00</div>
-        <div class="countdown-label">Jam</div>
-      </div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="countdown-minutes">00</div>
-        <div class="countdown-label">Menit</div>
-      </div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="countdown-seconds">00</div>
-        <div class="countdown-label">Detik</div>
-      </div>
-    </div>
-    <p style="color: #FFD700; font-size: 1.2rem;">Bersiaplah untuk menyambut tahun baru dengan penuh harapan!</p>
-  </div>
-  
-  <div id="newYearMessage" class="new-year-message">
-    Selamat Tahun Baru 2026!<br>
-    Mari sambut harapan baru dengan semangat dan langkah penuh percaya diri.
-  </div>
-</div>
-<script>
-// Configuration - Anda bisa ubah nilai ini sesuai kebutuhan
-const EVENT_CONFIG = {
-    // Atur tanggal, bulan, dan tahun target (bulan dimulai dari 0 = Januari)
-    targetDate: new Date(2025, 11, 31, 23, 59, 50), // Default: 31 Desember 2025 23:59:50
-    // Atur berapa menit kembang api akan ditampilkan setelah target waktu tercapai
-    fireworksDuration: 5, // dalam menit
-    // Pesan yang akan ditampilkan setelah target waktu tercapai
-    celebrationMessage: "Selamat Tahun Baru 2026! Mari sambut harapan baru dengan semangat dan langkah penuh percaya diri.",
-    // Warna tema (opsional)
-    themeColors: {
-        primary: '#FFD700',
-        secondary: '#FF0000',
-        background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)'
-    }
-};
-
-// State management
-let countdownInterval = null;
-let fireworksInterval = null;
-let isCelebrating = false;
-
-// Fungsi untuk mengubah konfigurasi dari luar
-function updateEventConfig(newConfig) {
-    Object.assign(EVENT_CONFIG, newConfig);
-    if (EVENT_CONFIG.targetDate instanceof Date === false) {
-        console.error('targetDate harus berupa objek Date');
-        return;
-    }
-    
-    // Restart countdown dengan konfigurasi baru
-    if (countdownInterval) {
-        clearInterval(countdownInterval);
-    }
-    checkCountdown();
-}
-
-// Main countdown functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Cek countdown setiap menit
-    checkCountdown();
-    setInterval(checkCountdown, 60000);
-    
-    // Mulai kembang api secara bertahap
-    startFireworks();
-    
-    // Log konfigurasi saat ini
-    console.log('🎯 Event Countdown Konfigurasi:');
-    console.log('Target Date:', EVENT_CONFIG.targetDate.toLocaleString());
-    console.log('Fireworks Duration:', EVENT_CONFIG.fireworksDuration + ' menit');
-    console.log('Message:', EVENT_CONFIG.celebrationMessage);
-});
-
-function checkCountdown() {
-    const now = new Date();
-    const targetDate = EVENT_CONFIG.targetDate;
-    
-    // Hitung waktu tersisa dalam milidetik
-    const timeRemaining = targetDate - now;
-    
-    // Jika waktu target belum lewat (masih ada waktu tersisa)
-    if (timeRemaining > 0) {
-        // Hitung berapa hari sebelum tanggal target
-        const daysBefore = Math.floor((targetDate - now) / (1000 * 60 * 60 * 24));
-        
-        // Tampilkan countdown jika H-1 atau H-0
-        if (daysBefore <= 1) {
-            const overlay = document.getElementById('newYearOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                
-                // Update countdown setiap detik
-                if (!countdownInterval) {
-                    updateCountdown();
-                    countdownInterval = setInterval(updateCountdown, 1000);
-                }
-            }
-        }
-    } 
-    // Jika waktu target sudah tercapai
-    else if (timeRemaining <= 0 && !isCelebrating) {
-        const minutesPastTarget = Math.abs(timeRemaining) / (1000 * 60);
-        
-        // Tampilkan kembang api selama durasi yang ditentukan
-        if (minutesPastTarget < EVENT_CONFIG.fireworksDuration) {
-            startCelebration();
-        }
-    }
-}
-
-function updateCountdown() {
-    const now = new Date();
-    const targetDate = EVENT_CONFIG.targetDate;
-    const timeRemaining = targetDate - now;
-    
-    if (timeRemaining > 0) {
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-        
-        // Update tampilan countdown jika elemen ada
-        const hoursEl = document.getElementById('countdown-hours');
-        const minutesEl = document.getElementById('countdown-minutes');
-        const secondsEl = document.getElementById('countdown-seconds');
-        
-        if (hoursEl) hoursEl.textContent = (days * 24 + hours).toString().padStart(2, '0');
-        if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
-        if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
-        
-        // Update judul countdown
-        const titleEl = document.querySelector('.countdown-title');
-        if (titleEl) {
-            const eventName = `Menuju ${targetDate.getFullYear()}`;
-            titleEl.textContent = `🎉 ${eventName} 🎉`;
-        }
-        
-        // Buat kembang api acak selama countdown
-        if (seconds % 5 === 0) {
-            createFirework();
-        }
-        
-        // Jika kurang dari 10 detik, intensifkan kembang api
-        if (timeRemaining < 10000) {
-            if (seconds % 2 === 0) {
-                createFirework();
-            }
-        }
-    } else {
-        // Waktu target tercapai
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-        startCelebration();
-    }
-}
-
-function startCelebration() {
-    if (isCelebrating) return;
-    
-    isCelebrating = true;
-    const overlay = document.getElementById('newYearOverlay');
-    
-    if (overlay) {
-        // Sembunyikan countdown, tampilkan tahun animasi
-        const countdownContainer = overlay.querySelector('.countdown-container');
-        const messageEl = document.getElementById('newYearMessage');
-        
-        if (countdownContainer) countdownContainer.style.display = 'none';
-        if (messageEl) {
-            messageEl.style.display = 'none';
-        }
-        
-        // Buat elemen tahun 2026 animasi
-        createYearAnimation();
-        
-        // Tunggu 2 detik, lalu tampilkan pesan
-        setTimeout(() => {
-            if (messageEl) {
-                messageEl.style.display = 'block';
-                messageEl.textContent = EVENT_CONFIG.celebrationMessage;
-            }
-        }, 2000);
-        
-        overlay.style.display = 'flex';
-        
-        // Intensifkan kembang api
-        if (fireworksInterval) clearInterval(fireworksInterval);
-        fireworksInterval = setInterval(createFirework, 50);
-        
-        // Buat konfeti
-        startConfetti();
-        
-        // Otomatis tutup setelah durasi kembang api
-        setTimeout(() => {
-            stopCelebration();
-        }, EVENT_CONFIG.fireworksDuration * 60 * 1000);
-    }
-}
-
-function createYearAnimation() {
-    const overlay = document.getElementById('newYearOverlay');
-    
-    // Hapus animasi tahun sebelumnya jika ada
-    const existingAnimation = overlay.querySelector('.year-animation');
-    if (existingAnimation) {
-        existingAnimation.remove();
-    }
-    
-    // Buat elemen untuk animasi tahun
-    const yearAnimation = document.createElement('div');
-    yearAnimation.className = 'year-animation';
-    yearAnimation.style.cssText = `
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 10vw;
-        font-weight: 900;
-        color: #FFD700;
-        text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000, 0 0 60px #FF0000;
-        opacity: 0;
-        z-index: 9999;
-        font-family: 'Raleway', sans-serif;
-        letter-spacing: 10px;
-        text-align: center;
-        width: 100%;
-    `;
-    
-    // Tambahkan tahun dari konfigurasi (tahun target + 1)
-    const targetYear = EVENT_CONFIG.targetDate.getFullYear() + 1;
-    yearAnimation.textContent = targetYear;
-    
-    overlay.appendChild(yearAnimation);
-    
-    // Animasi pembesaran 20% selama 2 detik
-    const animation = yearAnimation.animate([
-        { 
-            transform: 'translate(-50%, -50%) scale(1)',
-            opacity: 0,
-            filter: 'blur(10px)'
-        },
-        { 
-            transform: 'translate(-50%, -50%) scale(1.2)', // 20% lebih besar
-            opacity: 1,
-            filter: 'blur(0px)'
-        },
-        { 
-            transform: 'translate(-50%, -50%) scale(1.15)',
-            opacity: 0.9
-        }
-    ], {
-        duration: 2000,
-        easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        fill: 'forwards'
-    });
-    
-    // Tambahkan efek cahaya berdenyut setelah animasi selesai
-    animation.onfinish = () => {
-        yearAnimation.style.animation = 'pulseGlow 1.5s infinite alternate';
-        
-        // Tambahkan style untuk animasi pulse
-        if (!document.querySelector('#yearAnimationStyles')) {
-            const style = document.createElement('style');
-            style.id = 'yearAnimationStyles';
-            style.textContent = `
-                @keyframes pulseGlow {
-                    0% {
-                        text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000, 0 0 60px #FF0000;
-                        transform: translate(-50%, -50%) scale(1.15);
-                    }
-                    100% {
-                        text-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, 0 0 90px #FFD700;
-                        transform: translate(-50%, -50%) scale(1.18);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    };
-}
-
-function stopCelebration() {
-    isCelebrating = false;
-    const overlay = document.getElementById('newYearOverlay');
-    
-    if (overlay) {
-        // Hapus animasi tahun
-        const yearAnimation = overlay.querySelector('.year-animation');
-        if (yearAnimation) {
-            yearAnimation.remove();
-        }
-        
-        overlay.style.display = 'none';
-        
-        // Reset tampilan
-        const countdownContainer = overlay.querySelector('.countdown-container');
-        const messageEl = document.getElementById('newYearMessage');
-        
-        if (countdownContainer) countdownContainer.style.display = 'block';
-        if (messageEl) messageEl.style.display = 'none';
-    }
-    
-    // Hentikan kembang api
-    if (fireworksInterval) {
-        clearInterval(fireworksInterval);
-        fireworksInterval = null;
-    }
-    
-    // Hentikan konfeti
-    stopConfetti();
-}
-
-function startFireworks() {
-    // Kembang api background (jarang)
-    setInterval(() => {
-        if (!isCelebrating && Math.random() > 0.7) {
-            createFirework();
-        }
-    }, 2000);
-}
-
-function createFirework() {
-    const overlay = document.getElementById('newYearOverlay');
-    if (!overlay || overlay.style.display !== 'flex') return;
-    
-    const firework = document.createElement('div');
-    firework.style.cssText = `
-        position: absolute;
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-    `;
-    
-    const colors = ['#FF0000', '#FFD700', '#00FF00', '#0080FF', '#FF00FF', '#FFA500'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight;
-    
-    firework.style.left = x + 'px';
-    firework.style.top = y + 'px';
-    firework.style.backgroundColor = color;
-    firework.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-    
-    overlay.appendChild(firework);
-    
-    // Animasi ledakan
-    const explosion = firework.animate([
-        { transform: 'scale(1)', opacity: 1 },
-        { transform: 'scale(20)', opacity: 0 }
-    ], {
-        duration: 1000,
-        easing: 'ease-out'
-    });
-    
-    explosion.onfinish = () => {
-        if (firework.parentNode === overlay) {
-            overlay.removeChild(firework);
-        }
-    };
-    
-    // Partikel-partikel kecil
-    for (let i = 0; i < 30; i++) {
-        setTimeout(() => {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: absolute;
-                width: 3px;
-                height: 3px;
-                border-radius: 50%;
-                left: ${x}px;
-                top: ${y}px;
-                background-color: ${color};
-                pointer-events: none;
-                z-index: 9997;
-            `;
-            
-            overlay.appendChild(particle);
-            
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 50 + Math.random() * 100;
-            const duration = 800 + Math.random() * 800;
-            
-            particle.animate([
-                { transform: 'translate(0, 0)', opacity: 1 },
-                { 
-                    transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`,
-                    opacity: 0 
-                }
-            ], {
-                duration: duration,
-                easing: 'cubic-bezier(0.1, 0.7, 1.0, 0.1)'
-            });
-            
-            setTimeout(() => {
-                if (particle.parentNode === overlay) {
-                    overlay.removeChild(particle);
-                }
-            }, duration);
-        }, i * 20);
-    }
-}
-
-let confettiInterval = null;
-
-function startConfetti() {
-    if (confettiInterval) clearInterval(confettiInterval);
-    
-    // Buat konfeti awal
-    createConfettiBatch();
-    
-    // Lanjutkan membuat konfeti setiap detik
-    confettiInterval = setInterval(createConfettiBatch, 1000);
-}
-
-function stopConfetti() {
-    if (confettiInterval) {
-        clearInterval(confettiInterval);
-        confettiInterval = null;
-    }
-}
-
-function createConfettiBatch() {
-    const overlay = document.getElementById('newYearOverlay');
-    if (!overlay || overlay.style.display !== 'flex') return;
-    
-    for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('div');
-        confetti.style.cssText = `
-            position: absolute;
-            width: ${Math.random() * 10 + 5}px;
-            height: ${Math.random() * 10 + 5}px;
-            background-color: ${['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'][Math.floor(Math.random() * 6)]};
-            left: ${Math.random() * 100}vw;
-            top: -20px;
-            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-            opacity: ${Math.random() * 0.7 + 0.3};
-            z-index: 9996;
-        `;
-        
-        overlay.appendChild(confetti);
-        
-        const duration = Math.random() * 3000 + 2000;
-        const delay = Math.random() * 1000;
-        
-        confetti.animate([
-            { 
-                transform: 'translateY(0) rotate(0deg)',
-                opacity: confetti.style.opacity
-            },
-            { 
-                transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg)`,
-                opacity: 0
-            }
-        ], {
-            duration: duration,
-            delay: delay,
-            easing: 'cubic-bezier(0.1, 0.7, 1.0, 0.1)'
-        });
-        
-        setTimeout(() => {
-            if (confetti.parentNode === overlay) {
-                overlay.removeChild(confetti);
-            }
-        }, duration + delay);
-    }
-}
-
-function closeCountdown() {
-    stopCelebration();
-}
-</script>
-
-
-  <!-- Konten Utama -->
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <!-- Filter -->
-    <div class="flex flex-wrap gap-3 justify-center mb-8">
-      <button class="category-btn active px-4 py-2 bg-white rounded-full shadow text-sm font-medium transition-all" data-filter="all">
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-3 justify-center mb-12">
+      <button class="category-btn active px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:border-indigo-500/50" data-filter="all">
         <i class="fas fa-star mr-2 text-yellow-500"></i> Semua
       </button>
-      <button class="category-btn px-4 py-2 bg-white rounded-full shadow text-sm font-medium transition-all" data-filter="nasional">
+      <button class="category-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:border-indigo-500/50" data-filter="nasional">
         <i class="fas fa-flag mr-2 text-red-500"></i> Nasional
       </button>
-      <button class="category-btn px-4 py-2 bg-white rounded-full shadow text-sm font-medium transition-all" data-filter="keagamaan">
+      <button class="category-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:border-indigo-500/50" data-filter="keagamaan">
         <i class="fas fa-praying-hands mr-2 text-purple-500"></i> Keagamaan
       </button>
-      <button class="category-btn px-4 py-2 bg-white rounded-full shadow text-sm font-medium transition-all" data-filter="internasional">
-        <i class="fas fa-globe mr-2 text-green-500"></i> Internasional
+      <button class="category-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:border-indigo-500/50" data-filter="internasional">
+        <i class="fas fa-globe mr-2 text-blue-500"></i> Internasional
       </button>
-      <button class="category-btn px-4 py-2 bg-white rounded-full shadow text-sm font-medium transition-all" data-filter="komunitas">
-        <i class="fas fa-globe mr-2 text-green-500"></i> komunitas
+      <button class="category-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:border-indigo-500/50" data-filter="komunitas">
+        <i class="fas fa-users mr-2 text-green-500"></i> Komunitas
       </button>
     </div>
 
-    <!-- Grid acara -->
-    <div id="eventGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Event cards akan diisi oleh JavaScript -->
+    <!-- Event Grid -->
+    <div id="eventGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Loading placeholders -->
+      <div class="glass-card h-80 rounded-3xl animate-pulse"></div>
+      <div class="glass-card h-80 rounded-3xl animate-pulse"></div>
+      <div class="glass-card h-80 rounded-3xl animate-pulse"></div>
     </div>
-  </div>
+  </main>
 
-  <!-- Overlay Detail -->
-  <div class="overlay" id="detailOverlay">
-    <div class="close-btn" id="closeOverlay">
-      <i class="fas fa-times text-2xl text-gray-700"></i>
-    </div>
-    
-    <div class="detail-card">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
+  <!-- Detail Overlay -->
+  <div class="overlay fixed inset-0 z-[100] hidden items-center justify-center p-4 animate-fade-in" id="detailOverlay">
+    <div class="detail-card w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+      <div class="p-8 md:p-12 relative">
+        <button id="closeOverlay" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-white transition-colors">
+          <i class="fa fa-xmark text-2xl"></i>
+        </button>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6 border-b border-white/10 pb-8 mb-8">
+          <div class="flex-1">
+            <h2 class="text-3xl md:text-4xl font-bold bg-white text-transparent bg-clip-text" id="detailTitle">...</h2>
+            <p class="text-xl text-indigo-400 font-bold mt-2" id="detailDate"></p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-lg text-sm font-bold" id="detailCategory"></span>
+              <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-lg text-sm font-bold" id="detailCountdown"></span>
+            </div>
+          </div>
+          <div class="text-8xl bg-white/5 p-6 rounded-3xl shadow-inner" id="detailEmoji">📅</div>
+        </div>
+        
+        <div class="space-y-10">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800" id="detailTitle">Hari Kemerdekaan RI</h2>
-            <p class="text-lg text-blue-600 font-medium mt-1" id="detailDate">17 Agustus 2025</p>
-          </div>
-          <div class="text-4xl" id="detailEmoji">🇮🇩</div>
-        </div>
-        
-        <div class="mt-4 flex flex-wrap gap-4">
-          <div class="bg-blue-50 px-3 py-1 rounded-full text-blue-700 font-medium">
-            <i class="fas fa-calendar mr-2"></i> <span id="detailCategory">Nasional</span>
-          </div>
-          <div class="bg-yellow-50 px-3 py-1 rounded-full text-yellow-700 font-medium">
-            <i class="fas fa-clock mr-2"></i> <span id="detailCountdown">Hari Ini!</span>
-          </div>
-        </div>
-        
-        <div class="mt-6">
-          <h3 class="text-lg font-semibold text-gray-800">Deskripsi:</h3>
-          <p class="mt-2 text-gray-700 leading-relaxed" id="detailDescription">
-            Hari Kemerdekaan Republik Indonesia diperingati setiap tanggal 17 Agustus. Pada hari ini di tahun 1945, Soekarno dan Hatta memproklamasikan kemerdekaan Indonesia dari penjajahan.
-          </p>
-        </div>
-        
-        <div class="mt-8">
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Waktu Menuju Hari Penting:</h3>
-          <div class="progress-bar bg-gray-200 w-full">
-            <div class="progress-fill bg-blue-500" id="progressFill" style="width: 100%"></div>
-          </div>
-          <p class="text-sm text-gray-600 mt-2" id="progressText">Hari penting sedang berlangsung</p>
-        </div>
-        
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-gray-50 p-4 rounded-xl">
-            <h4 class="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-              <i class="fas fa-lightbulb text-yellow-500"></i> Fakta Menarik
-            </h4>
-            <p class="text-gray-600" id="detailFact">
-              Upacara bendera pertama pada 17 Agustus 1945 diadakan di halaman rumah Soekarno di Jalan Pegangsaan Timur 56, Jakarta.
-            </p>
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-3 text-white">
+              <i class="fa fa-align-left text-indigo-500"></i> Deskripsi
+            </h3>
+            <p class="text-gray-400 text-lg leading-relaxed" id="detailDescription"></p>
           </div>
           
-          <div class="bg-gray-50 p-4 rounded-xl">
-            <h4 class="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-              <i class="fas fa-book text-green-500"></i> Sejarah Singkat
-            </h4>
-            <p class="text-gray-600" id="detailHistory">
-              Proklamasi kemerdekaan dibacakan oleh Soekarno dengan didampingi oleh Mohammad Hatta pada hari Jumat, 17 Agustus 1945, yang untuk tahun 1945 bertepatan dengan 17 Ramadan 1364 H.
-            </p>
+          <div>
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-3 text-white">
+              <i class="fa fa-hourglass-half text-indigo-500"></i> Progres Waktu
+            </h3>
+            <div class="bg-white/5 h-4 w-full rounded-full overflow-hidden mb-3">
+              <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full" id="progressFill"></div>
+            </div>
+            <p class="text-gray-400 font-medium" id="progressText"></p>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass-card p-6 rounded-2xl border-indigo-500/10">
+              <h4 class="font-bold text-white mb-3 flex items-center gap-2 italic">
+                <i class="fa fa-lightbulb text-yellow-400"></i> Fakta Menarik
+              </h4>
+              <p class="text-gray-400 leading-relaxed" id="detailFact"></p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl border-purple-500/10">
+              <h4 class="font-bold text-white mb-3 flex items-center gap-2 italic">
+                <i class="fa fa-scroll text-purple-400"></i> Sejarah Singkat
+              </h4>
+              <p class="text-gray-400 leading-relaxed" id="detailHistory"></p>
+            </div>
           </div>
         </div>
-        
-        <div class="mt-8">
-          <h4 class="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-            <i class="fas fa-calendar-check text-purple-500"></i> Aktivitas Umum
-          </h4>
-          <p class="text-gray-600" id="detailActivities">
-            Upacara bendera, perlombaan rakyat (panjat pinang, tarik tambang, dll), pameran budaya, dan berbagai acara kemerdekaan di seluruh Indonesia.
-          </p>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <!-- <footer class="bg-white py-8 mt-12 border-t border-gray-200">
-    <div class="max-w-6xl mx-auto px-6 text-center text-gray-600">
-      <div class="flex justify-center gap-4 mb-4">
-        <a href="#" class="text-gray-500 hover:text-blue-600"><i class="fab fa-facebook text-xl"></i></a>
-        <a href="#" class="text-gray-500 hover:text-pink-600"><i class="fab fa-instagram text-xl"></i></a>
-        <a href="#" class="text-gray-500 hover:text-blue-400"><i class="fab fa-twitter text-xl"></i></a>
-        <a href="#" class="text-gray-500 hover:text-green-600"><i class="fab fa-whatsapp text-xl"></i></a>
-      </div>
-      <p>© 2025 Kalender Hari Penting Indonesia. Data diambil dari berbagai sumber resmi.</p>
-      <p class="mt-2 text-sm">Halaman ini diperbarui secara otomatis setiap hari.</p>
-    </div>
-  </footer> -->
   <script src="App/Event/even_data.js"></script>
-<script src="App/Event/event_script.js"></script>
-
-    <!-- <h2 class="w3-center w3-black">Library</h2>
-    <div class="w3-row-padding w3-dark-grey" style="margin-top:64px">
-        <div class="w3-container w3-dark-grey" style="padding:128px 16px" id="Aktivity">
-            <h1 class="w3-center">Book Reading</h1>
-            <h3 class="w3-center">Book Engine by Scribd</h3>
-            
-            <div>
-                <p><u><i><b>Desain Multimedia</b></i></u></p>
-                <button class="w3-button w3-blue" onclick="openModal('Desain Multimedia', 'https://www.scribd.com/embeds/346419464/content?start_page=1&view_mode=scroll&access_key=key-YqKETsd0Iy6HnVAmlAUC')">Buka</button>
-            </div>
-
-            <div>
-                <p><u><i><b>JOBSHEET DESAIN GRAFIS</b></i></u></p>
-                <button class="w3-button w3-blue" onclick="openModal('JOBSHEET DESAIN GRAFIS', 'https://www.scribd.com/embeds/278438533/content?start_page=1&view_mode=scroll&access_key=key-rsKtrdqntFYKsdPbSr9H')">Buka</button>
-            </div>
-
-            <div>
-                <p><u><i><b>Materi Multimedia</b></i></u></p>
-                <button class="w3-button w3-blue" onclick="openModal('Materi Multimedia', 'https://www.scribd.com/embeds/395035626/content?start_page=1&view_mode=scroll&access_key=key-H3yx1YzLehWAkOQGi2CO')">Buka</button>
-            </div>
-        </div>
-    </div> -->
-    
-    <!-- Modal -->
-    <div id="modal" class="w3-modal">
-        <div class="w3-modal-content w3-animate-opacity w3-card-4" style="width:80%">
-            <header class="w3-container w3-blue">
-                <span onclick="document.getElementById('modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                <h2 id="modal-title"></h2>
-            </header>
-            <div class="w3-container">
-                <iframe id="modal-iframe" width="100%" height="600" frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        function openModal(title, url) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-iframe').src = url;
-            document.getElementById('modal').style.display = 'block';
-        }
-    </script>
-  </div>
-
-
-
-
-
-  <!-- Modal for full size images on click-->
-  <!-- <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
-  <span class="w3-button w3-xxlarge w3-black w3-padding-large w3-display-topright" title="Close Modal Image">×</span>
-  <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-    <img id="img01" class="w3-image">
-    <p id="caption" class="w3-opacity w3-large"></p>
-  </div>
-</div> -->
-
-  <!-- Skills Section
-<div class="w3-container w3-light-grey w3-padding-64">
-  <div class="w3-row-padding">
-    <div class="w3-col m6">
-      <h3>Zan Nendatta</h3>
-      <p> Digital atau tradisional ART  <br>
-      Mayoritas Staff memiliki keahlian membuat ART Digital Atau Tradisional Art.</p>
-      
-      <p> Menghibur <br>
-      Kami akan Menghibur Para member dengan pembicaraan yang absurt dan random.</p>
-
-      <p> Share ilmu <br>
-      kami share beberapa ilmu sesuai jurusan yang dikuasai di server pemberitau.</p>
-
-
-    </div>
-    <div class="w3-col m6">
-      <p class="w3-wide"><i class="w3-margin-right"></i>Digital/tradisional Art</p>
-      <div class="w3-grey">
-        <div class="w3-container w3-dark-grey w3-center" style="width:90%">90%</div>
-      </div>
-      <p class="w3-wide"><i class="w3-margin-right"></i>Editing Video</p>
-      <div class="w3-grey">
-        <div class="w3-container w3-dark-grey w3-center" style="width:70%">70%</div>
-      </div>
-      <p class="w3-wide"><i class="w3-margin-right"></i>Penghibur</p>
-      <div class="w3-grey">
-        <div class="w3-container w3-dark-grey w3-center" style="width:95%">95%</div>
-      </div>
-      <p class="w3-wide"><i class="fa w3-margin-right"></i>Live 2D/3D Modeling</p>
-      <div class="w3-grey">
-        <div class="w3-container w3-dark-grey w3-center" style="width:20%">20%</div>
-      </div>
-    </div>
-  </div>
-</div>
- -->
-
-
-
-
-  <!-- Footer. This section contains an ad for W3Schools Spaces. You can leave it to support us. -->
-  <footer class="w3-center w3-black w3-padding-64">
-    <a href="#Aktivity" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
-    <div class="w3-xlarge w3-section">
-    </div>
-    <p class="w3-small">Website Ini bertujuan untuk Memperkenalkan Apa itu komunitas <b><U> Pemberi Tau Empire</U></b>
-    </p>
-  </footer>
-
-
-
+  <script src="App/Event/event_script.js"></script>
+  
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('Footer.html')
+      .then(r => r.text())
+      .then(d => document.getElementById('footer-placeholder').innerHTML = d);
+  </script>
 </body>
-
 </html>
