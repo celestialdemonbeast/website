@@ -56,6 +56,18 @@
             </div>
 
             <div class="bg-gray-800 text-gray-200 p-6 rounded-xl mt-4">
+                <h3 class="text-lg font-bold text-white mb-3">Setelah UPS udah nyala dan kecolok nggak perlu cabut lagi UPS ke PLN</h3>
+                <ul class="list-disc ml-5 space-y-2 text-sm">
+                    <li>karena Nggak ada lagi tegangan tinggi (startering) setelah UPS nyala, itu bikin listrik rumah jeglek</li>
+                    <li>bisa matiin UPS setelah PC udah mati, biar Baterainya ngecharger dan lebih awet umur baterainya</li>
+                    <li>kenapa Harus dimatiin UPS nya? biar PC kau nggak gampang rusak kalo misalnya ada tegabgab tinggi tiba tiba (biar umur PC kau lebih panjang)</li>
+                    <li><I><B>Noted : kalo kau nyalain UPS jangan sampe colokan UPS ke PLN kau pegang, karena Listrik mengalir dari UPS(usahain pake colokan yang saklar)</I></B></li>
+                    <li>Kalo UPSnya Baru harus di charger dulu selama 5-9 Jam, biar Baterainya ke-charger sampai 100%</li>
+                    <li>bisa pake 24Jam/7, karena Listriknya kepake dan nggak bikin over charge, nah kalo PC nggak nyala Harus dimatiin UPS nya.</li>
+                </ul>
+            </div>
+
+            <div class="bg-gray-800 text-gray-200 p-6 rounded-xl mt-4">
                 <h3 class="text-lg font-bold text-white mb-3">Mengapa harus berurutan?</h3>
                 <ul class="list-disc ml-5 space-y-2 text-sm">
                     <li><b>Menghindari lonjakan arus:</b> Mencegah beban PC membebani UPS saat sedang melakukan pengecekan mandiri (<i>self-test</i>).</li>
@@ -84,6 +96,93 @@
                 </div>
             </div>
         </section>
+
+<!-- BAGIAN 4: ESTIMASI DURASI (RUNTIME) DENGAN PERBANDINGAN BEBAN -->
+        <section class="bg-gray-800 text-white p-8 rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">4. Simulasi Durasi (Runtime) UPS 1200VA</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Tabel Perbandingan -->
+                <div class="bg-white text-gray-900 p-6 rounded-lg">
+                    <h3 class="font-bold text-lg mb-4">Tabel Perbandingan Beban</h3>
+                    <table class="w-full text-sm text-left">
+                        <thead class="border-b">
+                            <tr>
+                                <th class="py-2">Beban (Watt)</th>
+                                <th class="py-2">Estimasi Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-3">650 Watt (Full Load)</td>
+                                <td class="py-3 font-bold text-red-600">± 10 - 12 Menit</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">300 Watt (Rata-rata)</td>
+                                <td class="py-3 font-bold text-green-600">± 25 - 30 Menit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Penjelasan -->
+                <div>
+                    <h3 class="font-bold text-lg mb-3">Mengapa ada perbedaan?</h3>
+                    <p class="text-sm text-gray-300 mb-4">
+                        Semakin kecil beban daya yang ditarik PC, maka semakin efisien penggunaan baterai UPS. 
+                    </p>
+                    <div class="bg-blue-600 p-4 rounded-lg text-sm">
+                        <p class="font-bold mb-1">Analisis 300 Watt:</p>
+                        <p class="opacity-90">Dengan beban 300 Watt, UPS tidak bekerja terlalu keras (tidak panas), sehingga baterai dapat memberikan energi lebih awet dibandingkan beban penuh 650 Watt.</p>
+                    </div>
+                </div>
+                <div class="bg-blue-600 p-6 rounded-lg">
+                    <h4 class="font-bold mb-2">Penting Diketahui:</h4>
+                    <ul class="list-disc ml-5 text-sm space-y-2 opacity-90">
+                        <li>itu kalo beban Load nya 650watt, tapi jarang sampe segitu kok, paling gede mah 300watt rata rata load dengan game</li>
+                        <li>Waktu ini cukup untuk menyimpan data dan <i>shutdown</i> dengan aman.</li>
+                        <li>Beban 650W pada UPS 1200VA cukup tinggi; pastikan UPS memiliki kualitas komponen yang baik.</li>
+                        <li>Durasi akan berkurang seiring bertambahnya usia pakai baterai.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- BAGIAN 5: PERAWATAN & INFORMASI BATERAI UPS -->
+        <section class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+            <h2 class="text-2xl font-bold mb-6 text-blue-800 border-b-2 border-blue-200 pb-2">5. Baterai UPS: Perawatan & Kerusakan</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Jenis Baterai -->
+                <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded">
+                    <h3 class="font-bold mb-2">Tipe Baterai</h3>
+                    <p class="text-sm">Umumnya menggunakan <b>VRLA (Valve-Regulated Lead-Acid)</b> jenis <i>Sealed Lead Acid</i> (SLA). Baterai ini bersifat bebas perawatan (<i>maintenance-free</i>) namun memiliki umur pakai terbatas (biasanya 2-3 tahun).</p>
+                </div>
+
+                <!-- Cara Perawatan -->
+                <div class="p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded">
+                    <h3 class="font-bold mb-2">Cara Merawat</h3>
+                    <ul class="text-sm list-disc ml-4 space-y-1">
+                        <li>Jaga suhu ruangan agar tetap sejuk (ideal 25°C).</li>
+                        <li>Lakukan "Deep Discharge" setiap 3-6 bulan sekali untuk menjaga kesehatan sel.</li>
+                        <li>Hindari membiarkan UPS dalam kondisi mati total tanpa daya dalam waktu lama.</li>
+                    </ul>
+                </div>
+
+                <!-- Efek Kerusakan -->
+                <div class="p-4 border-l-4 border-red-500 bg-red-50 rounded">
+                    <h3 class="font-bold mb-2">Efek Baterai Rusak</h3>
+                    <ul class="text-sm list-disc ml-4 space-y-1">
+                        <li><b>Kembung (Swollen):</b> Baterai membengkak akibat gas berlebih; berisiko bocor.</li>
+                        <li><b>Kebocoran Cairan:</b> Korosi pada terminal yang bisa merusak komponen internal.</li>
+                        <li><b>Failure:</b> UPS mati mendadak saat listrik padam karena baterai kehilangan kemampuan menyimpan daya.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+                
+            
     </div>
 
     <script>
