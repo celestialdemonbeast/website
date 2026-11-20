@@ -653,107 +653,48 @@
         </div>
     </section>
 
-    <!-- Activity Section -->
+    <!-- Activity -->
     <section id="activity" class="py-20 bg-gray-900">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Activity</h2>
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-4xl mx-auto space-y-8">
+
+                <!-- Music Player -->
                 <div class="bg-black p-6 rounded-lg">
                     <h3 class="text-xl font-semibold mb-4 text-center">Music Player</h3>
                     <div class="widget-container">
-                        <iframe id="music-widget" class="widget-iframe" src="https://6klabs.com/widget/youtube/4bfc85cfe59ecc833857faa5a05e2c55171ac13c39b585123035e36c3616ac61" frameborder="0"></iframe>
-                        <iframe id="music-widget-2" class="widget-iframe" src="https://6klabs.com/widget/spotify/4bfc85cfe59ecc833857faa5a05e2c55171ac13c39b585123035e36c3616ac61" frameborder="0"></iframe>
+                        <iframe id="music-widget"
+                                class="widget-iframe"
+                                src="https://6klabs.com/widget/youtube/4bfc85cfe59ecc833857faa5a05e2c551ac13c39b585123035e36c3616ac61"
+                                frameborder="0"
+                                allow="autoplay; encrypted-media"
+                                loading="lazy"></iframe>
                         <div id="offline-widget" class="offline-widget" style="display: none;">
-                            <div class="offline-icon">
-                                <i class="fas fa-music"></i>
-                            </div>
+                            <i class="fas fa-music text-4xl mb-3"></i>
                             <h3 class="text-xl font-semibold mb-2">Music Player Offline</h3>
                             <p class="text-gray-200">The music widget is currently unavailable. Please check back later.</p>
                         </div>
                     </div>
                     <p class="text-gray-400 text-center mt-4">Enjoy some music while browsing!</p>
                 </div>
+
+                <!-- Now Playing (ListenBrainz) -->
+                <div class="bg-black p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Now Playing</h3>
+                    <div class="flex justify-center">
+                        <div class="card">
+                            <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
+                            <div>
+                                <div id="status" class="status idle">Memeriksa...</div>
+                                <p id="title" class="title">Belum ada data</p>
+                                <p id="artist" class="artist">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-
-<div>  <div class="card">
-    <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
-    <div>
-      <div id="status" class="status idle">Memeriksa...</div>
-      <p id="title" class="title">Belum ada data</p>
-      <p id="artist" class="artist">-</p>
-    </div>
-  </div>
-
-  <script>
-    const LB_USER = "Akanaken";
-    const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
-    const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
-
-    function renderTrack(track, isPlayingNow) {
-      const statusEl = document.getElementById("status");
-      const titleEl = document.getElementById("title");
-      const artistEl = document.getElementById("artist");
-      const coverEl = document.getElementById("cover");
-
-      if (!track) {
-        statusEl.textContent = "Tidak Sedang Memutar";
-        statusEl.className = "status idle";
-        titleEl.textContent = "Belum ada riwayat lagu";
-        artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
-        coverEl.style.display = "none";
-        return;
-      }
-
-      statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
-      statusEl.className = isPlayingNow ? "status" : "status idle";
-      titleEl.textContent = track.track_name || "Judul tidak diketahui";
-      artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
-
-      const releaseMbid = track.mbid_mapping?.release_mbid;
-      if (releaseMbid) {
-        coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
-        coverEl.style.display = "block";
-      } else {
-        coverEl.style.display = "none";
-      }
-    }
-
-    async function fetchNowPlaying() {
-      const statusEl = document.getElementById("status");
-      const titleEl = document.getElementById("title");
-      const artistEl = document.getElementById("artist");
-
-      try {
-        const nowRes = await fetch(PLAYING_NOW_URL);
-        if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
-        const nowData = await nowRes.json();
-        const activeListens = nowData?.payload?.listens || [];
-
-        if (activeListens.length > 0) {
-          renderTrack(activeListens[0]?.track_metadata, true);
-          return;
-        }
-
-        const recentRes = await fetch(RECENT_URL);
-        if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
-        const recentData = await recentRes.json();
-        const recentListens = recentData?.payload?.listens || [];
-
-        renderTrack(recentListens[0]?.track_metadata || null, false);
-      } catch (err) {
-        statusEl.textContent = "Error";
-        statusEl.className = "status idle";
-        titleEl.textContent = "Gagal memuat data ListenBrainz";
-        artistEl.textContent = err.message;
-      }
-    }
-
-    fetchNowPlaying();
-    setInterval(fetchNowPlaying, 15000);
-  </script>
-</div>
     </section>
 
     <!-- Projects Section -->
