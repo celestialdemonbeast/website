@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Now Playing - Akanaken</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #1e1e1e;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 14px 18px;
+      max-width: 420px;
+      width: 100%;
+    }
+    .cover {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #2c2c2c;
+      flex-shrink: 0;
+    }
+    .status {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #4ade80;
+      margin-bottom: 4px;
+    }
+    .status.idle {
+      color: #a1a1aa;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 16px;
+      margin: 0 0 2px;
+    }
+    .artist {
+      font-size: 14px;
+      color: #d4d4d8;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
+    <div>
+      <div id="status" class="status idle">Memeriksa...</div>
+      <p id="title" class="title">Belum ada data</p>
+      <p id="artist" class="artist">-</p>
+    </div>
+  </div>
+
+  <script>
+    const LB_USER = "Akanaken";
+    const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
+    const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
+
+    function renderTrack(track, isPlayingNow) {
+      const statusEl = document.getElementById("status");
+      const titleEl = document.getElementById("title");
+      const artistEl = document.getElementById("artist");
+      const coverEl = document.getElementById("cover");
+
+      if (!track) {
+        statusEl.textContent = "Tidak Sedang Memutar";
+        statusEl.className = "status idle";
+        titleEl.textContent = "Belum ada riwayat lagu";
+        artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
+        coverEl.style.display = "none";
+        return;
+      }
+
+      statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
+      statusEl.className = isPlayingNow ? "status" : "status idle";
+      titleEl.textContent = track.track_name || "Judul tidak diketahui";
+      artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
+
+      const releaseMbid = track.mbid_mapping?.release_mbid;
+      if (releaseMbid) {
+        coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
+        coverEl.style.display = "block";
+      } else {
+        coverEl.style.display = "none";
+      }
+    }
+
+    async function fetchNowPlaying() {
+      const statusEl = document.getElementById("status");
+      const titleEl = document.getElementById("title");
+      const artistEl = document.getElementById("artist");
+
+      try {
+        const nowRes = await fetch(PLAYING_NOW_URL);
+        if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
+        const nowData = await nowRes.json();
+        const activeListens = nowData?.payload?.listens || [];
+
+        if (activeListens.length > 0) {
+          renderTrack(activeListens[0]?.track_metadata, true);
+          return;
+        }
+
+        const recentRes = await fetch(RECENT_URL);
+        if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
+        const recentData = await recentRes.json();
+        const recentListens = recentData?.payload?.listens || [];
+
+        renderTrack(recentListens[0]?.track_metadata || null, false);
+      } catch (err) {
+        statusEl.textContent = "Error";
+        statusEl.className = "status idle";
+        titleEl.textContent = "Gagal memuat data ListenBrainz";
+        artistEl.textContent = err.message;
+      }
+    }
+
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 15000);
+  </script>
+</body>
+</html>
