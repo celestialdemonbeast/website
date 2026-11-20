@@ -675,6 +675,85 @@
                 </div>
             </div>
         </div>
+
+
+<div>  <div class="card">
+    <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
+    <div>
+      <div id="status" class="status idle">Memeriksa...</div>
+      <p id="title" class="title">Belum ada data</p>
+      <p id="artist" class="artist">-</p>
+    </div>
+  </div>
+
+  <script>
+    const LB_USER = "Akanaken";
+    const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
+    const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
+
+    function renderTrack(track, isPlayingNow) {
+      const statusEl = document.getElementById("status");
+      const titleEl = document.getElementById("title");
+      const artistEl = document.getElementById("artist");
+      const coverEl = document.getElementById("cover");
+
+      if (!track) {
+        statusEl.textContent = "Tidak Sedang Memutar";
+        statusEl.className = "status idle";
+        titleEl.textContent = "Belum ada riwayat lagu";
+        artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
+        coverEl.style.display = "none";
+        return;
+      }
+
+      statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
+      statusEl.className = isPlayingNow ? "status" : "status idle";
+      titleEl.textContent = track.track_name || "Judul tidak diketahui";
+      artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
+
+      const releaseMbid = track.mbid_mapping?.release_mbid;
+      if (releaseMbid) {
+        coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
+        coverEl.style.display = "block";
+      } else {
+        coverEl.style.display = "none";
+      }
+    }
+
+    async function fetchNowPlaying() {
+      const statusEl = document.getElementById("status");
+      const titleEl = document.getElementById("title");
+      const artistEl = document.getElementById("artist");
+
+      try {
+        const nowRes = await fetch(PLAYING_NOW_URL);
+        if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
+        const nowData = await nowRes.json();
+        const activeListens = nowData?.payload?.listens || [];
+
+        if (activeListens.length > 0) {
+          renderTrack(activeListens[0]?.track_metadata, true);
+          return;
+        }
+
+        const recentRes = await fetch(RECENT_URL);
+        if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
+        const recentData = await recentRes.json();
+        const recentListens = recentData?.payload?.listens || [];
+
+        renderTrack(recentListens[0]?.track_metadata || null, false);
+      } catch (err) {
+        statusEl.textContent = "Error";
+        statusEl.className = "status idle";
+        titleEl.textContent = "Gagal memuat data ListenBrainz";
+        artistEl.textContent = err.message;
+      }
+    }
+
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 15000);
+  </script>
+</div>
     </section>
 
     <!-- Projects Section -->
