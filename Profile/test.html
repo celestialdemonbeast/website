@@ -1,137 +1,812 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Now Playing - Akanaken</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #121212;
-      color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: #1e1e1e;
-      border: 1px solid #2e2e2e;
-      border-radius: 12px;
-      padding: 14px 18px;
-      max-width: 420px;
-      width: 100%;
-    }
-    .cover {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #2c2c2c;
-      flex-shrink: 0;
-    }
-    .status {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #4ade80;
-      margin-bottom: 4px;
-    }
-    .status.idle {
-      color: #a1a1aa;
-    }
-    .title {
-      font-weight: 700;
-      font-size: 16px;
-      margin: 0 0 2px;
-    }
-    .artist {
-      font-size: 14px;
-      color: #d4d4d8;
-      margin: 0;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
-    <div>
-      <div id="status" class="status idle">Memeriksa...</div>
-      <p id="title" class="title">Belum ada data</p>
-      <p id="artist" class="artist">-</p>
-    </div>
-  </div>
-
-  <script>
-    const LB_USER = "Akanaken";
-    const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
-    const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
-
-    function renderTrack(track, isPlayingNow) {
-      const statusEl = document.getElementById("status");
-      const titleEl = document.getElementById("title");
-      const artistEl = document.getElementById("artist");
-      const coverEl = document.getElementById("cover");
-
-      if (!track) {
-        statusEl.textContent = "Tidak Sedang Memutar";
-        statusEl.className = "status idle";
-        titleEl.textContent = "Belum ada riwayat lagu";
-        artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
-        coverEl.style.display = "none";
-        return;
-      }
-
-      statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
-      statusEl.className = isPlayingNow ? "status" : "status idle";
-      titleEl.textContent = track.track_name || "Judul tidak diketahui";
-      artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
-
-      const releaseMbid = track.mbid_mapping?.release_mbid;
-      if (releaseMbid) {
-        coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
-        coverEl.style.display = "block";
-      } else {
-        coverEl.style.display = "none";
-      }
-    }
-
-    async function fetchNowPlaying() {
-      const statusEl = document.getElementById("status");
-      const titleEl = document.getElementById("title");
-      const artistEl = document.getElementById("artist");
-
-      try {
-        const nowRes = await fetch(PLAYING_NOW_URL);
-        if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
-        const nowData = await nowRes.json();
-        const activeListens = nowData?.payload?.listens || [];
-
-        if (activeListens.length > 0) {
-          renderTrack(activeListens[0]?.track_metadata, true);
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akanaken (Kevin) - Celestial Demon Beast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    animation: {
+                        'pulse-slow': 'pulse 3s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ---- Widget ---- */
+        .widget-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            margin-bottom: 1rem;
+        }
+        .widget-iframe,
+        .offline-widget {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        .offline-widget {
+            background: linear-gradient(135deg, #6b46c1 0%, #4c51bf 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 1rem;
         }
 
-        const recentRes = await fetch(RECENT_URL);
-        if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
-        const recentData = await recentRes.json();
-        const recentListens = recentData?.payload?.listens || [];
+        /* ---- Discord Section ---- */
+        .discord-section {
+            background: linear-gradient(145deg, #1a1b2f 0%, #2c2f4a 100%);
+            border: 1px solid #5865F2;
+            box-shadow: 0 0 30px rgba(88, 101, 242, 0.2);
+        }
+        .copy-btn { transition: all 0.3s ease; }
+        .copy-btn:hover {
+            background: #5865F2;
+            color: white;
+            border-color: #5865F2;
+        }
 
-        renderTrack(recentListens[0]?.track_metadata || null, false);
-      } catch (err) {
-        statusEl.textContent = "Error";
-        statusEl.className = "status idle";
-        titleEl.textContent = "Gagal memuat data ListenBrainz";
-        artistEl.textContent = err.message;
-      }
-    }
+        /* ---- Toast ---- */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
 
-    fetchNowPlaying();
-    setInterval(fetchNowPlaying, 15000);
-  </script>
+        /* ---- Gallery ---- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(88, 101, 242, 0.3);
+        }
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .gallery-item:hover {
+            border-color: #5865F2;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 15px 8px 8px;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover .gallery-item-overlay { transform: translateY(0); }
+        .gallery-item-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            text-align: center;
+        }
+        .gallery-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: #5865F2;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(88, 101, 242, 0.5);
+            z-index: 2;
+        }
+
+        /* ---- Lightbox ---- */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox-overlay.active { display: flex; opacity: 1; }
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 3px solid #5865F2;
+            box-shadow: 0 0 50px rgba(88, 101, 242, 0.5);
+        }
+        .lightbox-close,
+        .lightbox-nav {
+            position: absolute;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: rgba(88, 101, 242, 0.3);
+            border: 2px solid #5865F2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lightbox-close { top: -50px; right: 0; font-size: 1.5rem; }
+        .lightbox-close:hover { background: #5865F2; transform: rotate(90deg); }
+        .lightbox-nav { top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+        .lightbox-nav:hover { background: #5865F2; }
+        .lightbox-prev { left: -70px; }
+        .lightbox-next { right: -70px; }
+        .lightbox-counter {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.1rem;
+            background: rgba(88, 101, 242, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid #5865F2;
+        }
+
+        .section-title-icon { animation: float 3s ease-in-out infinite; }
+
+        /* ---- Now Playing Card ---- */
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #1e1e1e;
+            border: 1px solid #2e2e2e;
+            border-radius: 12px;
+            padding: 14px 18px;
+            max-width: 420px;
+            width: 100%;
+        }
+        .cover {
+            width: 64px; height: 64px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #2c2c2c;
+            flex-shrink: 0;
+        }
+        .status {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #4ade80;
+            margin-bottom: 4px;
+        }
+        .status.idle { color: #a1a1aa; }
+        .title { font-weight: 700; font-size: 16px; margin: 0 0 2px; }
+        .artist { font-size: 14px; color: #d4d4d8; margin: 0; }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 1024px) {
+            .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .lightbox-nav { width: 40px; height: 40px; }
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
+        }
+        @media (max-width: 480px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .gallery-item-title { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-inter">
+
+    <!-- Toast -->
+    <div id="toast" class="toast-notification">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Link Fugi berhasil disalin!</span>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightboxOverlay" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <button onclick="closeLightbox()" class="lightbox-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <button onclick="prevImage()" class="lightbox-nav lightbox-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button onclick="nextImage()" class="lightbox-nav lightbox-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <img id="lightboxImage" src="" alt="Full View">
+            <div id="lightboxCounter" class="lightbox-counter">1/8</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-sm border-b border-gray-800">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold">Akanaken</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-gray-300 transition">Home</a>
+                <a href="#about" class="hover:text-gray-300 transition">About</a>
+                <a href="#skills" class="hover:text-gray-300 transition">Skills</a>
+                <a href="#discord" class="hover:text-gray-300 transition">Discord</a>
+                <a href="#projects" class="hover:text-gray-300 transition">Projects</a>
+                <a href="#contact" class="hover:text-gray-300 transition">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-black border-t border-gray-800">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="#home" class="hover:text-gray-300 transition py-2">Home</a>
+                <a href="#about" class="hover:text-gray-300 transition py-2">About</a>
+                <a href="#skills" class="hover:text-gray-300 transition py-2">Skills</a>
+                <a href="#discord" class="hover:text-gray-300 transition py-2">Discord</a>
+                <a href="#projects" class="hover:text-gray-300 transition py-2">Projects</a>
+                <a href="#contact" class="hover:text-gray-300 transition py-2">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="home" class="min-h-screen flex items-center justify-center py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-3xl mx-auto">
+                <div class="w-40 h-40 mx-auto mb-8 rounded-full overflow-hidden border-4 border-purple-500">
+                    <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/akanaken.png"
+                         alt="Akanaken Profile"
+                         class="w-full h-full object-cover">
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Hi, I'm <span class="text-purple-400">Akanaken</span></h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">Moderator at Celestial Demon Beast</p>
+                <p class="text-lg text-gray-400 mb-12">Ensuring our community thrives as a welcoming space for all members</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#projects" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition">View My Work</a>
+                    <a href="#contact" class="border border-gray-600 hover:border-gray-400 text-white px-6 py-3 rounded-lg transition">Contact Me</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">About Me</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-lg text-gray-300 mb-6">
+                        Hello everyone, I'm Akanaken, also known as Kevin within the Celestial Demon Beast community. As a Moderator, I'm here to ensure that our community thrives and remains a welcoming space for all members. Let's embark on this celestial journey together!
+                    </p>
+                    <p class="text-lg text-gray-300">
+                        I'm passionate about community building and creating engaging experiences for our members. My goal is to help maintain a positive and inclusive environment where everyone can share their interests and grow together.
+                    </p>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-64 h-64 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center overflow-hidden">
+                        <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/akanaken.png"
+                             alt="Akanaken Profile"
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Skills</h2>
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-900 p-6 rounded-lg text-center">
+                    <i class="fas fa-laptop-code text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Pengetahuan Bidang Komputer</h3>
+                    <p class="text-gray-400">Memahami berbagai aspek teknologi komputer dan sistem</p>
+                </div>
+                <div class="bg-gray-900 p-6 rounded-lg text-center">
+                    <i class="fas fa-video text-5xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">OBS Operation [Basic]</h3>
+                    <p class="text-gray-400">Kemampuan dasar dalam pengoperasian OBS untuk streaming</p>
+                </div>
+                <div class="bg-gray-900 p-6 rounded-lg text-center">
+                    <i class="fas fa-edit text-5xl text-purple-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Editing Video & Foto</h3>
+                    <p class="text-gray-400">Keterampilan dalam mengedit konten visual untuk berbagai keperluan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discord -->
+    <section id="discord" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                <i class="fab fa-discord text-indigo-500 mr-3 section-title-icon"></i>
+                Discord Information
+            </h2>
+            <div class="max-w-5xl mx-auto">
+                <div class="discord-section rounded-2xl p-8 md:p-12">
+                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-10">
+                        <div class="flex-shrink-0">
+                            <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg shadow-indigo-500/30">
+                                <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Foto/akanaken.png"
+                                     alt="Discord Profile"
+                                     class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity">
+                            </div>
+                            <div class="text-center mt-4">
+                                <span class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-circle text-green-400 text-xs mr-2"></i>Online
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4 flex items-center justify-center md:justify-start">
+                                Akanaken
+                                <span class="bg-indigo-600 text-white text-sm ml-3 px-3 py-1 rounded-full">Moderator</span>
+                            </h3>
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center justify-center md:justify-start text-gray-300">
+                                    <i class="fas fa-hashtag text-indigo-400 w-6"></i>
+                                    <span class="ml-2">Username: <span class="font-mono text-white">akanaken_cdb</span></span>
+                                </div>
+                                <div class="flex items-center justify-center md:justify-start text-gray-300">
+                                    <i class="fas fa-id-badge text-indigo-400 w-6"></i>
+                                    <span class="ml-2">ID: <span class="font-mono text-white">717098014145118299</span></span>
+                                </div>
+                                <div class="flex items-center justify-center md:justify-start text-gray-300">
+                                    <i class="fas fa-calendar text-indigo-400 w-6"></i>
+                                    <span class="ml-2">Member since: 2023</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-center md:justify-start mb-6">
+                                <a href="https://discord.com/users/717098014145118299"
+                                   target="_blank"
+                                   class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-indigo-600/30">
+                                    <i class="fab fa-discord mr-2"></i>Connect on Discord
+                                </a>
+                            </div>
+                            <div class="bg-black/50 rounded-lg p-4 border border-indigo-500/30">
+                                <p class="text-sm text-gray-400 mb-2">🔗 Fugi Link (Click to copy)</p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <code class="flex-grow bg-gray-900 px-4 py-3 rounded-lg text-indigo-300 font-mono text-sm border border-gray-700 break-all">
+                                        https://reactive.fugi.tech/basic/717098014145118299
+                                    </code>
+                                    <button onclick="copyFugiLink(event)"
+                                            class="copy-btn px-6 py-3 bg-gray-800 text-indigo-400 rounded-lg font-semibold border border-indigo-500 flex items-center justify-center gap-2 hover:bg-indigo-600 hover:text-white transition-all">
+                                        <i class="fas fa-copy"></i>Copy Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <h4 class="text-2xl font-semibold text-indigo-400">
+                            <i class="fas fa-images mr-2"></i>Community Gallery
+                        </h4>
+                        <p class="text-gray-400 text-sm mt-2">Klik gambar untuk melihat dalam ukuran penuh</p>
+                    </div>
+
+                    <div class="gallery-grid">
+                        <div class="gallery-item" onclick="openLightbox(0)">
+                            <div class="gallery-badge">#1</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png"
+                                 alt="Inactive REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/5865F2/ffffff?text=Profile'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Inactive Chibi REPO</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(1)">
+                            <div class="gallery-badge">#2</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png"
+                                 alt="Active Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/4f46e5/ffffff?text=CDB+Banner'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Active Chibi REPO</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(2)">
+                            <div class="gallery-badge">#3</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png"
+                                 alt="Mute Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/8b5cf6/ffffff?text=Event+Night'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Mute Chibi REPO</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(3)">
+                            <div class="gallery-badge">#4</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png"
+                                 alt="Deafen Chibi REPO"
+                                 onerror="this.src='https://via.placeholder.com/400x400/3b82f6/ffffff?text=Game+Night'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Deafen Chibi REPO</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(4)">
+                            <div class="gallery-badge">#5</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png"
+                                 alt="Active Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text=Mod+Team'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Active Chibi</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(5)">
+                            <div class="gallery-badge">#6</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png"
+                                 alt="Inactive Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/a855f7/ffffff?text=Community'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Inactive Chibi</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(6)">
+                            <div class="gallery-badge">#7</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png"
+                                 alt="Mute Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/ec4899/ffffff?text=Art+Contest'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Mute Chibi</div></div>
+                        </div>
+                        <div class="gallery-item" onclick="openLightbox(7)">
+                            <div class="gallery-badge">#8</div>
+                            <img src="https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png"
+                                 alt="Deafen Chibi"
+                                 onerror="this.src='https://via.placeholder.com/400x400/f97316/ffffff?text=Birthday'">
+                            <div class="gallery-item-overlay"><div class="gallery-item-title">Deafen Chibi</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activity -->
+    <section id="activity" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Activity</h2>
+            <div class="max-w-4xl mx-auto space-y-8">
+
+                <!-- Music Player -->
+                <div class="bg-black p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Music Player</h3>
+                    <div class="widget-container">
+                        <iframe id="music-widget"
+                                class="widget-iframe"
+                                src="https://6klabs.com/widget/youtube/4bfc85cfe59ecc833857faa5a05e2c551ac13c39b585123035e36c3616ac61"
+                                frameborder="0"
+                                allow="autoplay; encrypted-media"
+                                loading="lazy"></iframe>
+                        <div id="offline-widget" class="offline-widget" style="display: none;">
+                            <i class="fas fa-music text-4xl mb-3"></i>
+                            <h3 class="text-xl font-semibold mb-2">Music Player Offline</h3>
+                            <p class="text-gray-200">The music widget is currently unavailable. Please check back later.</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-center mt-4">Enjoy some music while browsing!</p>
+                </div>
+
+                <!-- Now Playing (ListenBrainz) -->
+                <div class="bg-black p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Now Playing</h3>
+                    <div class="flex justify-center">
+                        <div class="card">
+                            <img id="cover" class="cover" src="" alt="Cover Album" style="display:none;" />
+                            <div>
+                                <div id="status" class="status idle">Memeriksa...</div>
+                                <p id="title" class="title">Belum ada data</p>
+                                <p id="artist" class="artist">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Projects</h2>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-black rounded-lg overflow-hidden border border-gray-800 transition-transform hover:scale-105">
+                    <div class="h-48 bg-gradient-to-r from-purple-600 to-blue-700 flex items-center justify-center">
+                        <span class="text-4xl">🌌</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Celestial Demon Beast Website</h3>
+                        <p class="text-gray-400 mb-4">Website resmi komunitas Celestial Demon Beast dengan informasi terbaru dan kegiatan komunitas.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded text-sm">Website</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded text-sm">Community</span>
+                        </div>
+                        <a href="https://cdb-official.netlify.app/" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">Visit Website</a>
+                    </div>
+                </div>
+                <div class="bg-black rounded-lg overflow-hidden border border-gray-800 transition-transform hover:scale-105">
+                    <div class="h-48 bg-gradient-to-r from-blue-600 to-purple-700 flex items-center justify-center">
+                        <span class="text-4xl">⏰</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Time Generator Widget</h3>
+                        <p class="text-gray-400 mb-4">Widget generator waktu untuk keperluan komunitas dan koordinasi kegiatan.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded text-sm">Tool</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded text-sm">Utility</span>
+                        </div>
+                        <a href="https://feature-cdb.netlify.app/Time-Generator/Widget-Jam" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">Visit Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Get In Touch</h2>
+            <div class="max-w-2xl mx-auto text-center">
+                <p class="text-lg text-gray-300 mb-8">Feel free to reach out to me through any of these platforms:</p>
+                <div class="flex justify-center space-x-8">
+                    <a href="https://wa.me/6285171562692" target="_blank"
+                       class="bg-gray-800 hover:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-110">
+                        <i class="fab fa-whatsapp text-3xl text-green-500"></i>
+                    </a>
+                    <a href="https://discord.com/users/717098014145118299" target="_blank"
+                       class="bg-gray-800 hover:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-110">
+                        <i class="fab fa-discord text-3xl text-indigo-500"></i>
+                    </a>
+                    <a href="https://github.com/AKANAKEN" target="_blank"
+                       class="bg-gray-800 hover:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-110">
+                        <i class="fab fa-github text-3xl text-gray-300"></i>
+                    </a>
+                </div>
+                <p class="text-gray-400 mt-8">Click on the icons above to connect with me!</p>
+            </div>
+        </div>
+    </section>
+
+
+<!-- Scripts -->
+    <script>
+        /* ===== Gallery + Lightbox ===== */
+        const galleryImages = [
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png", fallback: "https://via.placeholder.com/800x800/5865F2/ffffff?text=Profile" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png", fallback: "https://via.placeholder.com/800x800/4f46e5/ffffff?text=CDB+Banner" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png", fallback: "https://via.placeholder.com/800x800/8b5cf6/ffffff?text=Event+Night" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png", fallback: "https://via.placeholder.com/800x800/3b82f6/ffffff?text=Game+Night" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png", fallback: "https://via.placeholder.com/800x800/6366f1/ffffff?text=Mod+Team" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png", fallback: "https://via.placeholder.com/800x800/a855f7/ffffff?text=Community" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png", fallback: "https://via.placeholder.com/800x800/ec4899/ffffff?text=Art+Contest" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png", fallback: "https://via.placeholder.com/800x800/f97316/ffffff?text=Birthday" }
+        ];
+
+        let currentImageIndex = 0;
+
+        function showImage(index) {
+            currentImageIndex = (index + galleryImages.length) % galleryImages.length;
+            const img = galleryImages[currentImageIndex];
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = img.src;
+            lightboxImage.onerror = function () { this.src = img.fallback; };
+            document.getElementById('lightboxCounter').textContent =
+                `${currentImageIndex + 1}/${galleryImages.length}`;
+        }
+
+        function openLightbox(index) {
+            showImage(index);
+            document.getElementById('lightboxOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightboxOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        function nextImage() { showImage(currentImageIndex + 1); }
+        function prevImage() { showImage(currentImageIndex - 1); }
+
+        document.addEventListener('keydown', function (e) {
+            if (!document.getElementById('lightboxOverlay').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
+        });
+
+        document.getElementById('lightboxOverlay').addEventListener('click', function (e) {
+            if (e.target === this) closeLightbox();
+        });
+
+        /* ===== Copy Fugi Link ===== */
+        function copyFugiLink(event) {
+            const link = "https://reactive.fugi.tech/basic/717098014145118299";
+            const toast = document.getElementById('toast');
+
+            const done = () => {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+                if (event) {
+                    const btn = event.currentTarget;
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btn.classList.add('bg-green-600', 'text-white');
+                    btn.classList.remove('bg-gray-800', 'text-indigo-400');
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                        btn.classList.remove('bg-green-600', 'text-white');
+                        btn.classList.add('bg-gray-800', 'text-indigo-400');
+                    }, 2000);
+                }
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(done).catch(() => legacyCopy(link, done));
+            } else {
+                legacyCopy(link, done);
+            }
+        }
+
+        function legacyCopy(text, cb) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            document.body.removeChild(ta);
+            cb && cb();
+        }
+
+        /* ===== Mobile menu ===== */
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        /* ===== Smooth scroll ===== */
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        /* ===== Widget fallback ===== */
+        document.addEventListener('DOMContentLoaded', function () {
+            const widget = document.getElementById('music-widget');
+            const offlineWidget = document.getElementById('offline-widget');
+            let loaded = false;
+
+            widget.addEventListener('load', () => { loaded = true; });
+
+            setTimeout(() => {
+                if (!loaded) {
+                    widget.style.display = 'none';
+                    offlineWidget.style.display = 'flex';
+                }
+            }, 8000);
+        });
+
+        /* ===== ListenBrainz Now Playing ===== */
+        const LB_USER = "Akanaken";
+        const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
+        const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
+
+        function renderTrack(track, isPlayingNow) {
+            const statusEl = document.getElementById("status");
+            const titleEl = document.getElementById("title");
+            const artistEl = document.getElementById("artist");
+            const coverEl = document.getElementById("cover");
+
+            if (!track) {
+                statusEl.textContent = "Tidak Sedang Memutar";
+                statusEl.className = "status idle";
+                titleEl.textContent = "Belum ada riwayat lagu";
+                artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
+                coverEl.style.display = "none";
+                return;
+            }
+
+            statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
+            statusEl.className = isPlayingNow ? "status" : "status idle";
+            titleEl.textContent = track.track_name || "Judul tidak diketahui";
+            artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
+
+            const releaseMbid = track.mbid_mapping?.release_mbid;
+            if (releaseMbid) {
+                coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
+                coverEl.style.display = "block";
+            } else {
+                coverEl.style.display = "none";
+            }
+        }
+
+        async function fetchNowPlaying() {
+            const statusEl = document.getElementById("status");
+            const titleEl = document.getElementById("title");
+            const artistEl = document.getElementById("artist");
+
+            try {
+                const nowRes = await fetch(PLAYING_NOW_URL);
+                if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
+                const nowData = await nowRes.json();
+                const active = nowData?.payload?.listens || [];
+
+                if (active.length > 0) {
+                    renderTrack(active[0]?.track_metadata, true);
+                    return;
+                }
+
+                const recentRes = await fetch(RECENT_URL);
+                if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
+                const recentData = await recentRes.json();
+                const recent = recentData?.payload?.listens || [];
+
+                renderTrack(recent[0]?.track_metadata || null, false);
+            } catch (err) {
+                statusEl.textContent = "Error";
+                statusEl.className = "status idle";
+                titleEl.textContent = "Gagal memuat data ListenBrainz";
+                artistEl.textContent = err.message;
+            }
+        }
+
+        fetchNowPlaying();
+        setInterval(fetchNowPlaying, 15000);
+    </script>
 </body>
 </html>
