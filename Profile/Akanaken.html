@@ -766,220 +766,194 @@
     </footer>
 
     <!-- JavaScript -->
+   <!-- Scripts -->
     <script>
-        // Gallery images array for lightbox
+        /* ===== Gallery + Lightbox ===== */
         const galleryImages = [
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png",
-                fallback: "https://via.placeholder.com/800x800/5865F2/ffffff?text=Profile"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png",
-                fallback: "https://via.placeholder.com/800x800/4f46e5/ffffff?text=CDB+Banner"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png",
-                fallback: "https://via.placeholder.com/800x800/8b5cf6/ffffff?text=Event+Night"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png",
-                fallback: "https://via.placeholder.com/800x800/3b82f6/ffffff?text=Game+Night"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png",
-                fallback: "https://via.placeholder.com/800x800/6366f1/ffffff?text=Mod+Team"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png",
-                fallback: "https://via.placeholder.com/800x800/a855f7/ffffff?text=Community"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png",
-                fallback: "https://via.placeholder.com/800x800/ec4899/ffffff?text=Art+Contest"
-            },
-            {
-                src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png",
-                fallback: "https://via.placeholder.com/800x800/f97316/ffffff?text=Birthday"
-            }
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/2.png", fallback: "https://via.placeholder.com/800x800/5865F2/ffffff?text=Profile" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/4.png", fallback: "https://via.placeholder.com/800x800/4f46e5/ffffff?text=CDB+Banner" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/3.png", fallback: "https://via.placeholder.com/800x800/8b5cf6/ffffff?text=Event+Night" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/1.png", fallback: "https://via.placeholder.com/800x800/3b82f6/ffffff?text=Game+Night" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/5.png", fallback: "https://via.placeholder.com/800x800/6366f1/ffffff?text=Mod+Team" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/6.png", fallback: "https://via.placeholder.com/800x800/a855f7/ffffff?text=Community" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/8.png", fallback: "https://via.placeholder.com/800x800/ec4899/ffffff?text=Art+Contest" },
+            { src: "https://webdevcdb.github.io/API_SERVER_303076/010000110100010001000010/Fugi/7.png", fallback: "https://via.placeholder.com/800x800/f97316/ffffff?text=Birthday" }
         ];
 
         let currentImageIndex = 0;
 
-        // Lightbox functions
-        function openLightbox(index) {
-            currentImageIndex = index;
-            const lightbox = document.getElementById('lightboxOverlay');
+        function showImage(index) {
+            currentImageIndex = (index + galleryImages.length) % galleryImages.length;
+            const img = galleryImages[currentImageIndex];
             const lightboxImage = document.getElementById('lightboxImage');
-            
-            // Set image source with fallback
-            const img = galleryImages[index];
             lightboxImage.src = img.src;
-            lightboxImage.onerror = function() {
-                this.src = img.fallback;
-            };
-            
-            updateLightboxCounter();
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            lightboxImage.onerror = function () { this.src = img.fallback; };
+            document.getElementById('lightboxCounter').textContent =
+                `${currentImageIndex + 1}/${galleryImages.length}`;
         }
 
+        function openLightbox(index) {
+            showImage(index);
+            document.getElementById('lightboxOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
         function closeLightbox() {
             document.getElementById('lightboxOverlay').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+        function nextImage() { showImage(currentImageIndex + 1); }
+        function prevImage() { showImage(currentImageIndex - 1); }
 
-        function nextImage() {
-            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-            const lightboxImage = document.getElementById('lightboxImage');
-            const img = galleryImages[currentImageIndex];
-            lightboxImage.src = img.src;
-            lightboxImage.onerror = function() {
-                this.src = img.fallback;
-            };
-            updateLightboxCounter();
-        }
-
-        function prevImage() {
-            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
-            const lightboxImage = document.getElementById('lightboxImage');
-            const img = galleryImages[currentImageIndex];
-            lightboxImage.src = img.src;
-            lightboxImage.onerror = function() {
-                this.src = img.fallback;
-            };
-            updateLightboxCounter();
-        }
-
-        function updateLightboxCounter() {
-            document.getElementById('lightboxCounter').innerHTML = 
-                `${currentImageIndex + 1}/${galleryImages.length}`;
-        }
-
-        // Keyboard navigation for lightbox
-        document.addEventListener('keydown', function(e) {
-            if (document.getElementById('lightboxOverlay').classList.contains('active')) {
-                if (e.key === 'Escape') {
-                    closeLightbox();
-                }
-                if (e.key === 'ArrowRight') {
-                    nextImage();
-                }
-                if (e.key === 'ArrowLeft') {
-                    prevImage();
-                }
-            }
+        document.addEventListener('keydown', function (e) {
+            if (!document.getElementById('lightboxOverlay').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
         });
 
-        // Close lightbox when clicking outside
-        document.getElementById('lightboxOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLightbox();
-            }
+        document.getElementById('lightboxOverlay').addEventListener('click', function (e) {
+            if (e.target === this) closeLightbox();
         });
 
-        // Copy Fugi Link Function
+        /* ===== Copy Fugi Link ===== */
         function copyFugiLink(event) {
             const link = "https://reactive.fugi.tech/basic/717098014145118299";
-            
-            navigator.clipboard.writeText(link).then(function() {
-                const toast = document.getElementById('toast');
+            const toast = document.getElementById('toast');
+
+            const done = () => {
                 toast.classList.add('show');
-                
-                toast.querySelector('span').textContent = 'Link Fugi berhasil disalin!';
-                
-                setTimeout(function() {
-                    toast.classList.remove('show');
-                }, 3000);
-                
+                setTimeout(() => toast.classList.remove('show'), 3000);
                 if (event) {
-                    const copyBtn = event.currentTarget;
-                    const originalText = copyBtn.innerHTML;
-                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                    copyBtn.classList.add('bg-green-600', 'text-white');
-                    copyBtn.classList.remove('bg-gray-800', 'text-indigo-400');
-                    
-                    setTimeout(function() {
-                        copyBtn.innerHTML = originalText;
-                        copyBtn.classList.remove('bg-green-600', 'text-white');
-                        copyBtn.classList.add('bg-gray-800', 'text-indigo-400');
+                    const btn = event.currentTarget;
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btn.classList.add('bg-green-600', 'text-white');
+                    btn.classList.remove('bg-gray-800', 'text-indigo-400');
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                        btn.classList.remove('bg-green-600', 'text-white');
+                        btn.classList.add('bg-gray-800', 'text-indigo-400');
                     }, 2000);
                 }
-            }).catch(function(err) {
-                const textArea = document.createElement("textarea");
-                textArea.value = link;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textArea);
-                alert("Link Fugi berhasil disalin!");
-            });
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(done).catch(() => legacyCopy(link, done));
+            } else {
+                legacyCopy(link, done);
+            }
         }
 
-        // Mobile menu functionality
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        function legacyCopy(text, cb) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            document.body.removeChild(ta);
+            cb && cb();
+        }
+
+        /* ===== Mobile menu ===== */
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         });
 
-        // Smooth scrolling for anchor links
+        /* ===== Smooth scroll ===== */
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                }
+                const target = document.querySelector(targetId);
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                document.getElementById('mobile-menu').classList.add('hidden');
             });
         });
 
-        // Widget fallback logic
-        document.addEventListener('DOMContentLoaded', function() {
-            const youtubeWidget = document.getElementById('music-widget');
-            const spotifyWidget = document.getElementById('music-widget-2');
+        /* ===== Widget fallback ===== */
+        document.addEventListener('DOMContentLoaded', function () {
+            const widget = document.getElementById('music-widget');
             const offlineWidget = document.getElementById('offline-widget');
-            
-            spotifyWidget.style.display = 'none';
-            
-            youtubeWidget.addEventListener('error', function() {
-                console.log('YouTube widget failed to load, trying Spotify...');
-                youtubeWidget.style.display = 'none';
-                spotifyWidget.style.display = 'block';
-                
-                spotifyWidget.addEventListener('error', function() {
-                    console.log('Spotify widget also failed, showing offline widget');
-                    spotifyWidget.style.display = 'none';
+            let loaded = false;
+
+            widget.addEventListener('load', () => { loaded = true; });
+
+            setTimeout(() => {
+                if (!loaded) {
+                    widget.style.display = 'none';
                     offlineWidget.style.display = 'flex';
-                });
-            });
-            
-            setTimeout(function() {
-                if (youtubeWidget.contentDocument && youtubeWidget.contentDocument.URL === 'about:blank') {
-                    console.log('YouTube widget timed out, trying Spotify...');
-                    youtubeWidget.style.display = 'none';
-                    spotifyWidget.style.display = 'block';
-                    
-                    setTimeout(function() {
-                        if (spotifyWidget.contentDocument && spotifyWidget.contentDocument.URL === 'about:blank') {
-                            console.log('Spotify widget also timed out, showing offline widget');
-                            spotifyWidget.style.display = 'none';
-                            offlineWidget.style.display = 'flex';
-                        }
-                    }, 3000);
                 }
-            }, 5000);
+            }, 8000);
         });
+
+        /* ===== ListenBrainz Now Playing ===== */
+        const LB_USER = "Akanaken";
+        const PLAYING_NOW_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/playing-now`;
+        const RECENT_URL = `https://api.listenbrainz.org/1/user/${encodeURIComponent(LB_USER)}/listens?count=1`;
+
+        function renderTrack(track, isPlayingNow) {
+            const statusEl = document.getElementById("status");
+            const titleEl = document.getElementById("title");
+            const artistEl = document.getElementById("artist");
+            const coverEl = document.getElementById("cover");
+
+            if (!track) {
+                statusEl.textContent = "Tidak Sedang Memutar";
+                statusEl.className = "status idle";
+                titleEl.textContent = "Belum ada riwayat lagu";
+                artistEl.textContent = "Putar lagu di Navidrome untuk menampilkannya";
+                coverEl.style.display = "none";
+                return;
+            }
+
+            statusEl.textContent = isPlayingNow ? "Sedang Diputar" : "Terakhir Diputar";
+            statusEl.className = isPlayingNow ? "status" : "status idle";
+            titleEl.textContent = track.track_name || "Judul tidak diketahui";
+            artistEl.textContent = `${track.artist_name || "Artis tidak diketahui"}${track.release_name ? " • " + track.release_name : ""}`;
+
+            const releaseMbid = track.mbid_mapping?.release_mbid;
+            if (releaseMbid) {
+                coverEl.src = `https://coverartarchive.org/release/${releaseMbid}/front-250`;
+                coverEl.style.display = "block";
+            } else {
+                coverEl.style.display = "none";
+            }
+        }
+
+        async function fetchNowPlaying() {
+            const statusEl = document.getElementById("status");
+            const titleEl = document.getElementById("title");
+            const artistEl = document.getElementById("artist");
+
+            try {
+                const nowRes = await fetch(PLAYING_NOW_URL);
+                if (!nowRes.ok) throw new Error("Gagal mengambil status playing-now");
+                const nowData = await nowRes.json();
+                const active = nowData?.payload?.listens || [];
+
+                if (active.length > 0) {
+                    renderTrack(active[0]?.track_metadata, true);
+                    return;
+                }
+
+                const recentRes = await fetch(RECENT_URL);
+                if (!recentRes.ok) throw new Error("Gagal mengambil riwayat lagu");
+                const recentData = await recentRes.json();
+                const recent = recentData?.payload?.listens || [];
+
+                renderTrack(recent[0]?.track_metadata || null, false);
+            } catch (err) {
+                statusEl.textContent = "Error";
+                statusEl.className = "status idle";
+                titleEl.textContent = "Gagal memuat data ListenBrainz";
+                artistEl.textContent = err.message;
+            }
+        }
+
+        fetchNowPlaying();
+        setInterval(fetchNowPlaying, 15000);
     </script>
 </body>
 </html>
